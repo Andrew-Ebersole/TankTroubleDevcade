@@ -6,6 +6,7 @@ namespace TankTrouble
 {
     public class Game1 : Game
     {
+        // variables yay!
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
@@ -13,7 +14,10 @@ namespace TankTrouble
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            IsMouseVisible = false;
+            int size = 1080;
+            _graphics.PreferredBackBufferHeight = size;
+            _graphics.PreferredBackBufferWidth = 9*(size / 21 );
         }
 
         protected override void Initialize()
