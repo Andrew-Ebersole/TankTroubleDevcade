@@ -102,19 +102,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\acebe\\.nuget\\packages\\": {}
+    "C:\\Users\\Will\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\acebe\\Documents\\CodeProjects\\TankTroubleRepo\\TankTrouble\\TankTrouble.csproj",
+      "projectUniqueName": "D:\\MonoGame\\TankTroubleREPO\\TankTrouble\\TankTrouble.csproj",
       "projectName": "TankTrouble",
-      "projectPath": "C:\\Users\\acebe\\Documents\\CodeProjects\\TankTroubleRepo\\TankTrouble\\TankTrouble.csproj",
-      "packagesPath": "C:\\Users\\acebe\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\acebe\\Documents\\CodeProjects\\TankTroubleRepo\\TankTrouble\\obj\\",
+      "projectPath": "D:\\MonoGame\\TankTroubleREPO\\TankTrouble\\TankTrouble.csproj",
+      "packagesPath": "C:\\Users\\Will\\.nuget\\packages\\",
+      "outputPath": "D:\\MonoGame\\TankTroubleREPO\\TankTrouble\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\acebe\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Will\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
