@@ -35,7 +35,6 @@ namespace TankTrouble
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             System.Console.WriteLine("Will smells");
-            System.Console.WriteLine("nah thats cap big g");
             // TODO: Add your update logic here
 
             base.Update(gameTime);
