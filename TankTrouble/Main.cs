@@ -18,6 +18,8 @@ namespace TankTrouble
         private float tankRotation;
 
 
+        private Texture2D activeTexture;
+
         private Rectangle wallRect;
 
 
@@ -58,6 +60,7 @@ namespace TankTrouble
 
             wallRect = new Rectangle(150, 400, 30, 150);
 
+
             Globals.SpriteBatch = _spriteBatch;
             Globals.GraphicsDeviceManager = _graphics;
             Globals.ContentManager = Content;
@@ -86,7 +89,15 @@ namespace TankTrouble
             black = new Texture2D(GraphicsDevice, 1, 1);
             black.SetData(new Color[] { Color.Black });
 
+
+            activeTexture = black;
+
         }
+
+
+
+        // if hit wall when positive velocity
+
 
         /// <summary>
         /// Used for the logic parts of the code like calculating velocity
@@ -109,10 +120,17 @@ namespace TankTrouble
             else if (kstate.IsKeyDown(Keys.S))
             {
                 player1.Velocity = -1;
-            }
-            else
+            } else
             {
                 player1.Velocity = 0;
+            }
+            
+            if (player1.Intersect(wallRect))
+            {
+                activeTexture = red;
+            } else
+            {
+                activeTexture = black;
             }
 
 
@@ -176,7 +194,7 @@ namespace TankTrouble
 
             }
 
-            player1.Intersect(wallRect);
+            
 
             player1.Update();
             player2.Update();
@@ -200,7 +218,7 @@ namespace TankTrouble
             player1.Draw();
             player2.Draw();
 
-            _spriteBatch.Draw(black, wallRect, Color.White);
+            _spriteBatch.Draw(activeTexture, wallRect, Color.White);
 
             _spriteBatch.End();
             

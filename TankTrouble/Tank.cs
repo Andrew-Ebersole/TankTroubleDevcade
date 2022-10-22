@@ -29,6 +29,7 @@ namespace TankTrouble
 
 
 
+
         // Properties
         
         /// <summary>
@@ -52,6 +53,7 @@ namespace TankTrouble
 
             }
 
+
         }
         
         /// <summary>
@@ -61,6 +63,7 @@ namespace TankTrouble
         {
 
             get
+
             {
                 return yPos;
             }
@@ -151,16 +154,25 @@ namespace TankTrouble
 
 
 
-        public void Intersect(Rectangle wall)
+        public bool Intersect(Rectangle wall)
         {
 
             if (rect.Intersects(wall))
             {
 
+                return true;
+                // 
+                //velocity *= -2;
+                //X += -Velocity * (Math.Sin(Rotation));
+                //Y += Velocity * (Math.Cos(Rotation));
+                //rect.X = (int)X;
+                //rect.Y = (int)Y;
+                //velocity = 0;
 
-                // TODO
-
-
+            }
+            else
+            {
+                return false;
             }
 
         }
