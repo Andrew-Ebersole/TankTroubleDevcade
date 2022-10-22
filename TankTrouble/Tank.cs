@@ -13,10 +13,8 @@ namespace TankTrouble
         // Fields
 
         // position fields
-        private int xPos;
-        private int yPos;
-        private double xDouble;
-        private double yDouble;
+        private double xPos;
+        private double yPos;
         private float rotation;
 
         // tank's velocities
@@ -36,7 +34,7 @@ namespace TankTrouble
         /// <summary>
         /// public property for x position
         /// </summary>
-        public int X { 
+        public double X { 
 
             get 
             { 
@@ -59,7 +57,7 @@ namespace TankTrouble
         /// <summary>
         /// public property for y position
         /// </summary>
-        public int Y
+        public double Y
         {
 
             get
@@ -117,14 +115,13 @@ namespace TankTrouble
             this.yPos = y;
 
 
-            rect = new Rectangle(X, Y, width, height);
+            rect = new Rectangle((int)X, (int)Y, width, height);
 
 
 
             this.texture = texture;
 
-            xDouble = X;
-            yDouble = Y;
+            
 
         }
 
@@ -132,10 +129,8 @@ namespace TankTrouble
         // Methods
         public void MoveTank(int distance)
         {
-            xDouble += -distance * (Math.Sin(Rotation));
-            yDouble += distance * (Math.Cos(Rotation));
-            X = (int)xDouble;
-            Y = (int)yDouble;
+            X += -distance * (Math.Sin(Rotation));
+            Y += distance * (Math.Cos(Rotation));
         }
 
 
@@ -146,8 +141,8 @@ namespace TankTrouble
 
 
 
-            rect.X = X;
-            rect.Y = Y;
+            rect.X = (int)X;
+            rect.Y = (int)Y;
 
 
 
