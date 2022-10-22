@@ -4,6 +4,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Security.Cryptography.X509Certificates;
 
 namespace TankTrouble
 {
@@ -16,13 +18,11 @@ namespace TankTrouble
         private Rectangle tankRect;
         private float tankRotation;
 
-
-        //test comment
-
         private int tankHeight;
         private int tankWidth;
 
         private Texture2D texture;
+
 
         /// <summary>
         /// Only happens at the beginning
@@ -84,12 +84,12 @@ namespace TankTrouble
             // Forward
             if (kstate.IsKeyDown(Keys.W))
             {
-
+                MoveTank(1);
             }
             // Backwards
             if (kstate.IsKeyDown(Keys.S))
             {
-
+                MoveTank(-1);
             }
             // Turn Left
             if (kstate.IsKeyDown(Keys.A))
@@ -111,7 +111,12 @@ namespace TankTrouble
             {
 
             }
-
+            // Move Function
+            void MoveTank(int distance)
+            {
+                tankRect.X += -distance*(int)(10*Math.Sin(tankRotation));
+                tankRect.Y += distance*(int)(10*Math.Cos(tankRotation));
+            }
 
 
             // Player 2 Controls --- //
