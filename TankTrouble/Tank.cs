@@ -26,7 +26,7 @@ namespace TankTrouble
 
 
         // Properties
-
+        
         /// <summary>
         /// public property for x position
         /// </summary>
@@ -41,7 +41,7 @@ namespace TankTrouble
             {
 
                 // if X value is within 0 and max height
-                if (value >= 0 && value < Globals.GraphicsDeviceManager.PreferredBackBufferWidth)
+                if (value >= 0 && value <= Globals.GraphicsDeviceManager.PreferredBackBufferWidth)
                 {
                     xPos = value;
                 }
@@ -49,7 +49,7 @@ namespace TankTrouble
             }
 
         }
-
+        
         /// <summary>
         /// public property for y position
         /// </summary>
@@ -97,9 +97,11 @@ namespace TankTrouble
 
             // enter calculated positions to rectangle construtor
             
+            this.xPos = x;
+            this.yPos = y;
 
 
-            rect = new Rectangle(x, y, width, height);
+            rect = new Rectangle(X, Y, width, height);
 
 
 
@@ -110,6 +112,33 @@ namespace TankTrouble
 
 
         // Methods
+        public void MoveTank(int distance)
+        {
+            X += -distance * (int)(10 * Math.Sin(Rotation));
+            Y += distance * (int)(10 * Math.Cos(Rotation));
+        }
+
+
+
+        public void Update()
+        {
+            //TODO
+
+            rect.X = X;
+            rect.Y = Y;
+
+
+        }
+
+
+        public void Draw()
+        {
+            // TODO
+
+            Globals.SpriteBatch.Draw(texture, Rectangle, null, Color.White, Rotation, new Vector2(0.5f, 0.5f), SpriteEffects.None, 1);
+
+
+        }
 
 
     }
