@@ -17,6 +17,8 @@ namespace TankTrouble
         private Rectangle tankRect;
         private float tankRotation;
 
+
+
         private int tankHeight;
         private int tankWidth;
 
@@ -92,13 +94,19 @@ namespace TankTrouble
             // Forward
             if (kstate.IsKeyDown(Keys.W))
             {
-                player1.MoveTank(1);
+                player1.Velocity = 1;
             }
             // Backwards
-            if (kstate.IsKeyDown(Keys.S))
+            else if (kstate.IsKeyDown(Keys.S))
             {
-                player1.MoveTank(-1);
+                player1.Velocity = -1;
             }
+            else
+            {
+                player1.Velocity = 0;
+            }
+
+
             // Turn Left
             if (kstate.IsKeyDown(Keys.A))
             {
@@ -109,6 +117,7 @@ namespace TankTrouble
             {
                 player1.Rotation += 0.06f;
             }
+
             // Shoot
             if (kstate.IsKeyDown(Keys.C))
             {
@@ -125,13 +134,18 @@ namespace TankTrouble
             // Forward
             if (kstate.IsKeyDown(Keys.Up))
             {
-                player2.MoveTank(1);
+                player2.Velocity = 1;
             }
             // Backwards
-            if (kstate.IsKeyDown(Keys.Down))
+            else if (kstate.IsKeyDown(Keys.Down))
             {
-                player2.MoveTank(-1);
+                player2.Velocity = -1;
             }
+            else
+            {
+                player2.Velocity = 0;
+            }
+
             // Turn Left
             if (kstate.IsKeyDown(Keys.Left))
             {

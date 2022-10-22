@@ -17,9 +17,9 @@ namespace TankTrouble
         private double yPos;
         private float rotation;
 
-        // tank's velocities
-        private float xVelo;
-        private float yVelo;
+        // tank's velocity
+        private float velocity;
+
 
         private Rectangle rect;
 
@@ -79,14 +79,11 @@ namespace TankTrouble
         }
 
         /// <summary>
-        /// public property for X velocity
+        /// public property for velocity
         /// </summary>
-        public float XVelo { get { return xVelo; } set { xVelo = value; } }
+        public float Velocity { get { return velocity; } set { velocity = value; } }
 
-        /// <summary>
-        /// public property for Y veloctiy
-        /// </summary>
-        public float YVelo { get { return yVelo; } set { yVelo = value; } }
+
 
         /// <summary>
         /// public property for rotation
@@ -127,23 +124,17 @@ namespace TankTrouble
 
 
         // Methods
-        public void MoveTank(int distance)
-        {
-            X += -distance * (Math.Sin(Rotation));
-            Y += distance * (Math.Cos(Rotation));
-        }
-
 
 
         public void Update()
         {
             //TODO
 
+            CalculateRotation();
 
-
+            // change rectangle positions to new x and y
             rect.X = (int)X;
             rect.Y = (int)Y;
-
 
 
         }
@@ -166,11 +157,19 @@ namespace TankTrouble
             {
 
 
-                MoveTank(-1);
+                // TODO
 
 
 
             }
+        }
+
+
+
+        public void CalculateRotation()
+        {
+            X += -Velocity * (Math.Sin(Rotation));
+            Y += Velocity * (Math.Cos(Rotation));
         }
 
 
