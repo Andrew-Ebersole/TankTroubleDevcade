@@ -64,7 +64,7 @@ namespace TankTrouble
             wallRect = new Rectangle(150, 400, 30, 150);
 
 
-            testBall = new Balls(200, 200, 10, 200f, 200f, black);
+            testBall = new Balls(200, 200, 15, 200f, 200f, black);
 
 
             Globals.SpriteBatch = _spriteBatch;
