@@ -55,7 +55,7 @@ namespace TankTrouble
             base.Initialize();
 
             tankWidth = 40;
-            tankHeight = 60;
+            tankHeight = 50;
             tankRect = new Rectangle(100, 100, tankWidth, tankHeight);
 
             wallRect = new Rectangle(150, 400, 30, 150);

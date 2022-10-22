@@ -24,7 +24,7 @@ namespace TankTrouble
         // Rect is drawn hitbox is used for collisions
         private Rectangle rect;
         private Rectangle hitbox;
-
+        private Rectangle cannon;
 
         private int ammo;
         private Texture2D texture;
@@ -116,7 +116,7 @@ namespace TankTrouble
 
             rect = new Rectangle((int)X, (int)Y, width, height);
             hitbox = new Rectangle((int)X - height / 2, (int)Y - height / 2, height, height);
-
+            cannon = new Rectangle((int)X, (int)Y*2, width / 3, (int)height*1);
             this.texture = texture;
         }
 
@@ -141,8 +141,9 @@ namespace TankTrouble
         public void Draw()
         {
             // TODO
-
+            Globals.SpriteBatch.Draw(texture, hitbox, null, Color.Black, 0, new Vector2(0, 0), SpriteEffects.None, 1);
             Globals.SpriteBatch.Draw(texture, Rectangle, null, Color.White, Rotation, new Vector2(0.5f, 0.5f), SpriteEffects.None, 1);
+            Globals.SpriteBatch.Draw(texture, cannon, null, Color.White, Rotation, new Vector2(0.5f, 0f), SpriteEffects.None, 1);
         }
 
 
@@ -179,6 +180,8 @@ namespace TankTrouble
             rect.Y = (int)Y;
             hitbox.X = (int)X - rect.Height / 2;
             hitbox.Y = (int)Y - rect.Height / 2;
+            cannon.X = (int)X;
+            cannon.Y = (int)Y;
         }
 
 
