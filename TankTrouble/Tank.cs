@@ -19,6 +19,10 @@ namespace TankTrouble
         private double yDouble;
         private float rotation;
 
+        // tank's velocities
+        private float xVelo;
+        private float yVelo;
+
         private Rectangle rect;
 
         private int ammo;
@@ -77,6 +81,16 @@ namespace TankTrouble
         }
 
         /// <summary>
+        /// public property for X velocity
+        /// </summary>
+        public float XVelo { get { return xVelo; } set { xVelo = value; } }
+
+        /// <summary>
+        /// public property for Y veloctiy
+        /// </summary>
+        public float YVelo { get { return yVelo; } set { yVelo = value; } }
+
+        /// <summary>
         /// public property for rotation
         /// </summary>
         public float Rotation { get { return rotation; } set { rotation = value; } }
@@ -130,8 +144,11 @@ namespace TankTrouble
         {
             //TODO
 
+
+
             rect.X = X;
             rect.Y = Y;
+
 
 
         }
@@ -144,6 +161,19 @@ namespace TankTrouble
             Globals.SpriteBatch.Draw(texture, Rectangle, null, Color.White, Rotation, new Vector2(0.5f, 0.5f), SpriteEffects.None, 1);
 
 
+        }
+
+
+
+        public void Intersect(Rectangle wall)
+        {
+            if (rect.Intersects(wall))
+            {
+
+                MoveTank()
+
+
+            }
         }
 
 
