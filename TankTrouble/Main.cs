@@ -122,17 +122,13 @@ namespace TankTrouble
                 player1.Velocity = -1;
             } else
             {
+                
+                if (player1.Intersect(wallRect))
+                {
+                    player1.Velocity *= -2;
+                }
                 player1.Velocity = 0;
             }
-            
-            if (player1.Intersect(wallRect))
-            {
-                activeTexture = red;
-            } else
-            {
-                activeTexture = black;
-            }
-
 
             // Turn Left
             if (kstate.IsKeyDown(Keys.A))
@@ -170,9 +166,13 @@ namespace TankTrouble
             }
             else
             {
+                if (player2.Intersect(wallRect))
+                {
+                    player2.Velocity *= -2;
+                    player2.UpdatePosition();
+                }
                 player2.Velocity = 0;
             }
-
             // Turn Left
             if (kstate.IsKeyDown(Keys.Left))
             {
@@ -194,8 +194,10 @@ namespace TankTrouble
 
             }
 
+            // Collision
+            player1.Intersect(wallRect);
+            player2.Intersect(wallRect);
             
-
             player1.Update();
             player2.Update();
 

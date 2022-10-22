@@ -21,12 +21,14 @@ namespace TankTrouble
         private float velocity;
 
 
+        // Rect is drawn hitbox is used for collisions
         private Rectangle rect;
+        private Rectangle hitbox;
+
 
         private int ammo;
-
         private Texture2D texture;
-
+   
 
 
 
@@ -105,70 +107,59 @@ namespace TankTrouble
 
         public Tank(int x, int y, float rotation, int width, int height, Texture2D texture)
         {
-
             // TODO
             // calculate starting rotation
-
             // enter calculated positions to rectangle construtor
             
             this.xPos = x;
             this.yPos = y;
 
-
             rect = new Rectangle((int)X, (int)Y, width, height);
-
-
+            hitbox = new Rectangle((int)X - height / 2, (int)Y - height / 2, height, height);
 
             this.texture = texture;
-
-            
-
         }
 
 
         // Methods
 
-
+        /// <summary>
+        /// Updates logic every frame
+        /// </summary>
         public void Update()
         {
             //TODO
 
-            CalculateRotation();
+            UpdatePosition();
 
             // change rectangle positions to new x and y
-            rect.X = (int)X;
-            rect.Y = (int)Y;
-
-
         }
 
-
+        /// <summary>
+        /// updates visuals every frame
+        /// </summary>
         public void Draw()
         {
             // TODO
 
             Globals.SpriteBatch.Draw(texture, Rectangle, null, Color.White, Rotation, new Vector2(0.5f, 0.5f), SpriteEffects.None, 1);
-
-
         }
 
 
-
+        /// <summary>
+        /// Used to check if the tank is intersecting a wall
+        /// </summary>
+        /// <param name="wall"> The rectangle to check if the tank has collided with </param>
+        /// <returns> boolean value if they are colliding </returns>
         public bool Intersect(Rectangle wall)
         {
 
-            if (rect.Intersects(wall))
+            if (hitbox.Intersects(wall))
             {
-
+                velocity *= -2;
+                UpdatePosition();
+                velocity = 0;
                 return true;
-                // 
-                //velocity *= -2;
-                //X += -Velocity * (Math.Sin(Rotation));
-                //Y += Velocity * (Math.Cos(Rotation));
-                //rect.X = (int)X;
-                //rect.Y = (int)Y;
-                //velocity = 0;
-
             }
             else
             {
@@ -177,13 +168,19 @@ namespace TankTrouble
 
         }
 
-
-
-        public void CalculateRotation()
+        /// <summary>
+        /// Moves the X and Y coordinates based on the rotation of the tank
+        /// </summary>
+        public void UpdatePosition()
         {
             X += -Velocity * (Math.Sin(Rotation));
             Y += Velocity * (Math.Cos(Rotation));
+            rect.X = (int)X;
+            rect.Y = (int)Y;
+            hitbox.X = (int)X - rect.Height / 2;
+            hitbox.Y = (int)Y - rect.Height / 2;
         }
+
 
     }
 }
