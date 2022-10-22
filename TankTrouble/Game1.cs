@@ -89,12 +89,12 @@ namespace TankTrouble
             // Turn Left
             if (kstate.IsKeyDown(Keys.A))
             {
-                tankRotation += 0.1f;
+                tankRotation -= 0.06f;
             }
             // Turn Right
             if (kstate.IsKeyDown(Keys.D))
             {
-
+                tankRotation += 0.06f;
             }
             // Shoot
             if (kstate.IsKeyDown(Keys.C))
