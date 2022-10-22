@@ -1,5 +1,5 @@
 ﻿// Tank Trouble
-// Will and Andrew
+// Will Lyons and Andrew
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,6 +13,9 @@ namespace TankTrouble
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        /// <summary>
+        /// Only happens at the beginning
+        /// </summary>
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -23,18 +26,29 @@ namespace TankTrouble
             _graphics.PreferredBackBufferWidth = 9*(size / 21 );
         }
 
+        /// <summary>
+        /// Imma be real i have no clue why this is here
+        /// </summary>
         protected override void Initialize()
         {
 
             base.Initialize();
         }
 
+        /// <summary>
+        /// Loads the content from the content folder
+        /// </summary>
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         }
 
+        /// <summary>
+        /// Used for the logic parts of the code like calculating velocity
+        /// and taking keyboard inputs
+        /// </summary>
+        /// <param name="gameTime">Amount of milliseconds since last update</param>
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -109,6 +123,10 @@ namespace TankTrouble
             base.Update(gameTime);
         }
 
+        /// <summary>
+        /// Used for drawing the content on the screen
+        /// </summary>
+        /// <param name="gameTime">Amount of milliseconds since last update</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.LightGray);
