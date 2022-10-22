@@ -20,7 +20,7 @@ namespace TankTrouble
 
         private static ContentManager contentManager;
 
-        private static float gameTime;
+        private static GameTime gameTime;
 
 
         // Properties
@@ -31,7 +31,10 @@ namespace TankTrouble
 
         public static ContentManager ContentManager { get { return contentManager; } set { contentManager = value; } }
 
-        public static float GameTime { get { return gameTime; } set { gameTime = value; } }
+        public static GameTime GameTime { get { return gameTime; } set { gameTime = value; } }
+
+        public static double DeltaTime { get { return GameTime.ElapsedGameTime.TotalSeconds; } }
+
 
     }
 
