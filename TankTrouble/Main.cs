@@ -23,8 +23,11 @@ namespace TankTrouble
         private Rectangle wallRect;
 
 
+
         private int tankHeight;
         private int tankWidth;
+
+        private Balls testBall;
 
         private Texture2D blue;
         private Texture2D red;
@@ -61,9 +64,15 @@ namespace TankTrouble
             wallRect = new Rectangle(150, 400, 30, 150);
 
 
+            testBall = new Balls(200, 200, 15, 200f, 200f, black);
+
+
             Globals.SpriteBatch = _spriteBatch;
             Globals.GraphicsDeviceManager = _graphics;
             Globals.ContentManager = Content;
+            Globals.WindowWidth = _graphics.PreferredBackBufferWidth;
+            Globals.WindowHeight = _graphics.PreferredBackBufferHeight;
+
 
             player1 = new Tank(100, 100, 0, tankWidth, tankHeight, blue);
             player2 = new Tank(300, 800, 0, tankWidth, tankHeight, red);
@@ -202,7 +211,8 @@ namespace TankTrouble
             player1.Intersect(wallRect);
             player2.Intersect(wallRect);
 
-            
+            testBall.update();
+
             player1.Update();
             player2.Update();
 
@@ -224,6 +234,10 @@ namespace TankTrouble
 
             player1.Draw();
             player2.Draw();
+
+            //_spriteBatch.Draw(black, ballRect, Color.White);
+
+            testBall.Draw();
 
             _spriteBatch.Draw(activeTexture, wallRect, Color.White);
 
