@@ -22,6 +22,10 @@ namespace TankTrouble
 
         private static GameTime gameTime;
 
+        private static int windowWidth;
+
+        private static int windowHeight;
+
 
         // Properties
 
@@ -34,6 +38,11 @@ namespace TankTrouble
         public static GameTime GameTime { get { return gameTime; } set { gameTime = value; } }
 
         public static double DeltaTime { get { return GameTime.ElapsedGameTime.TotalSeconds; } }
+
+        public static int WindowWidth { get { return windowWidth; } set { windowWidth = value; } }
+
+        public static int WindowHeight { get { return windowHeight; } set { windowHeight = value; } }
+
 
 
     }
