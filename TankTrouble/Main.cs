@@ -18,6 +18,8 @@ namespace TankTrouble
         private float tankRotation;
 
 
+        private Texture2D activeTexture;
+
         private Rectangle wallRect;
 
 
@@ -53,10 +55,11 @@ namespace TankTrouble
             base.Initialize();
 
             tankWidth = 40;
-            tankHeight = 60;
+            tankHeight = 50;
             tankRect = new Rectangle(100, 100, tankWidth, tankHeight);
 
             wallRect = new Rectangle(150, 400, 30, 150);
+
 
             Globals.SpriteBatch = _spriteBatch;
             Globals.GraphicsDeviceManager = _graphics;
@@ -86,7 +89,15 @@ namespace TankTrouble
             black = new Texture2D(GraphicsDevice, 1, 1);
             black.SetData(new Color[] { Color.Black });
 
+
+            activeTexture = black;
+
         }
+
+
+
+        // if hit wall when positive velocity
+
 
         /// <summary>
         /// Used for the logic parts of the code like calculating velocity
@@ -109,12 +120,15 @@ namespace TankTrouble
             else if (kstate.IsKeyDown(Keys.S))
             {
                 player1.Velocity = -1;
-            }
-            else
+            } else
             {
+                
+                if (player1.Intersect(wallRect))
+                {
+                    player1.Velocity *= -2;
+                }
                 player1.Velocity = 0;
             }
-
 
             // Turn Left
             if (kstate.IsKeyDown(Keys.A))
@@ -152,9 +166,13 @@ namespace TankTrouble
             }
             else
             {
+                if (player2.Intersect(wallRect))
+                {
+                    player2.Velocity *= -2;
+                    player2.UpdatePosition();
+                }
                 player2.Velocity = 0;
             }
-
             // Turn Left
             if (kstate.IsKeyDown(Keys.Left))
             {
@@ -176,8 +194,10 @@ namespace TankTrouble
 
             }
 
+            // Collision
             player1.Intersect(wallRect);
-
+            player2.Intersect(wallRect);
+            
             player1.Update();
             player2.Update();
 
@@ -200,7 +220,7 @@ namespace TankTrouble
             player1.Draw();
             player2.Draw();
 
-            _spriteBatch.Draw(black, wallRect, Color.White);
+            _spriteBatch.Draw(activeTexture, wallRect, Color.White);
 
             _spriteBatch.End();
             
