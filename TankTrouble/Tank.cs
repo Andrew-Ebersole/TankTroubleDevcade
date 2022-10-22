@@ -15,6 +15,8 @@ namespace TankTrouble
         // position fields
         private int xPos;
         private int yPos;
+        private double xDouble;
+        private double yDouble;
         private float rotation;
 
         private Rectangle rect;
@@ -105,8 +107,10 @@ namespace TankTrouble
 
 
 
-            this.texture = texture; 
+            this.texture = texture;
 
+            xDouble = X;
+            yDouble = Y;
 
         }
 
@@ -114,8 +118,10 @@ namespace TankTrouble
         // Methods
         public void MoveTank(int distance)
         {
-            X += -distance * (int)(10 * Math.Sin(Rotation));
-            Y += distance * (int)(10 * Math.Cos(Rotation));
+            xDouble += -distance * (Math.Sin(Rotation));
+            yDouble += distance * (Math.Cos(Rotation));
+            X = (int)xDouble;
+            Y = (int)yDouble;
         }
 
 

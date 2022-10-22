@@ -21,8 +21,10 @@ namespace TankTrouble
         private int tankWidth;
 
         private Texture2D texture;
+        private Texture2D texture2;
 
         Tank player1;
+        Tank player2;
 
         /// <summary>
         /// Only happens at the beginning
@@ -32,7 +34,7 @@ namespace TankTrouble
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = false;
-            int size = 1080;
+            int size = 1000;
             _graphics.PreferredBackBufferHeight = size;
             _graphics.PreferredBackBufferWidth = 9*(size / 21 );
         }
@@ -45,8 +47,8 @@ namespace TankTrouble
 
             base.Initialize();
 
-            tankWidth = 80;
-            tankHeight = 120;
+            tankWidth = 40;
+            tankHeight = 60;
             tankRect = new Rectangle(100, 100, tankWidth, tankHeight);
 
             Globals.SpriteBatch = _spriteBatch;
@@ -54,6 +56,7 @@ namespace TankTrouble
             Globals.ContentManager = Content;
 
             player1 = new Tank(100, 100, 0, tankWidth, tankHeight, texture);
+            player2 = new Tank(300, 800, 0, tankWidth, tankHeight, texture2);
         }
 
         /// <summary>
@@ -67,6 +70,10 @@ namespace TankTrouble
             // test blue texture
             texture = new Texture2D(GraphicsDevice, 1, 1);
             texture.SetData(new Color[] { Color.Blue });
+
+            // test red texture
+            texture2 = new Texture2D(GraphicsDevice, 1, 1);
+            texture2.SetData(new Color[] { Color.Red });
 
         }
 
@@ -118,22 +125,22 @@ namespace TankTrouble
             // Forward
             if (kstate.IsKeyDown(Keys.Up))
             {
-
+                player2.MoveTank(1);
             }
             // Backwards
             if (kstate.IsKeyDown(Keys.Down))
             {
-
+                player2.MoveTank(-1);
             }
             // Turn Left
             if (kstate.IsKeyDown(Keys.Left))
             {
-
+                player2.Rotation -= 0.06f;
             }
             // Turn Right
             if (kstate.IsKeyDown(Keys.Right))
             {
-
+                player2.Rotation += 0.06f;
             }
             // Shoot
             if (kstate.IsKeyDown(Keys.NumPad1))
@@ -148,7 +155,7 @@ namespace TankTrouble
 
 
             player1.Update();
-
+            player2.Update();
 
             base.Update(gameTime);
         }
@@ -167,6 +174,7 @@ namespace TankTrouble
             //_spriteBatch.Draw(texture, tankRect, null,  Color.White, tankRotation, new Vector2(0.5f ,0.5f), SpriteEffects.None, 1);
 
             player1.Draw();
+            player2.Draw();
 
             _spriteBatch.End();
             
