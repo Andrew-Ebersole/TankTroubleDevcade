@@ -17,8 +17,9 @@ namespace TankTrouble
         private double yPos;
         private float rotation;
 
-        // tank's velocities
+        // tank's velocity
         private float velocity;
+
 
         private Rectangle rect;
 
@@ -77,6 +78,12 @@ namespace TankTrouble
 
         }
 
+        /// <summary>
+        /// public property for velocity
+        /// </summary>
+        public float Velocity { get { return velocity; } set { velocity = value; } }
+
+
 
         /// <summary>
         /// public property for rotation
@@ -117,18 +124,17 @@ namespace TankTrouble
 
 
         // Methods
-        
 
 
         public void Update()
         {
             //TODO
 
+            CalculateRotation();
 
-
+            // change rectangle positions to new x and y
             rect.X = (int)X;
             rect.Y = (int)Y;
-
 
 
         }
@@ -150,7 +156,20 @@ namespace TankTrouble
             if (rect.Intersects(wall))
             {
 
+
+                // TODO
+
+
+
             }
+        }
+
+
+
+        public void CalculateRotation()
+        {
+            X += -Velocity * (Math.Sin(Rotation));
+            Y += Velocity * (Math.Cos(Rotation));
         }
 
     }
