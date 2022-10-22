@@ -170,7 +170,7 @@ namespace TankTrouble
             if (rect.Intersects(wall))
             {
 
-                MoveTank(0);
+                MoveTank(-1);
 
 
             }
