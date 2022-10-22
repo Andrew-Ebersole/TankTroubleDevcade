@@ -18,12 +18,15 @@ namespace TankTrouble
         private float tankRotation;
 
 
+        private Rectangle wallRect;
+
 
         private int tankHeight;
         private int tankWidth;
 
-        private Texture2D texture;
-        private Texture2D texture2;
+        private Texture2D blue;
+        private Texture2D red;
+        private Texture2D black;
 
         Tank player1;
         Tank player2;
@@ -53,12 +56,14 @@ namespace TankTrouble
             tankHeight = 60;
             tankRect = new Rectangle(100, 100, tankWidth, tankHeight);
 
+            wallRect = new Rectangle(150, 400, 30, 150);
+
             Globals.SpriteBatch = _spriteBatch;
             Globals.GraphicsDeviceManager = _graphics;
             Globals.ContentManager = Content;
 
-            player1 = new Tank(100, 100, 0, tankWidth, tankHeight, texture);
-            player2 = new Tank(300, 800, 0, tankWidth, tankHeight, texture2);
+            player1 = new Tank(100, 100, 0, tankWidth, tankHeight, blue);
+            player2 = new Tank(300, 800, 0, tankWidth, tankHeight, red);
         }
 
         /// <summary>
@@ -70,12 +75,16 @@ namespace TankTrouble
 
 
             // test blue texture
-            texture = new Texture2D(GraphicsDevice, 1, 1);
-            texture.SetData(new Color[] { Color.Blue });
+            blue = new Texture2D(GraphicsDevice, 1, 1);
+            blue.SetData(new Color[] { Color.Blue });
 
             // test red texture
-            texture2 = new Texture2D(GraphicsDevice, 1, 1);
-            texture2.SetData(new Color[] { Color.Red });
+            red = new Texture2D(GraphicsDevice, 1, 1);
+            red.SetData(new Color[] { Color.Red });
+
+            // test black texture
+            black = new Texture2D(GraphicsDevice, 1, 1);
+            black.SetData(new Color[] { Color.Black });
 
         }
 
@@ -167,6 +176,7 @@ namespace TankTrouble
 
             }
 
+            player1.Intersect(wallRect);
 
             player1.Update();
             player2.Update();
@@ -189,6 +199,8 @@ namespace TankTrouble
 
             player1.Draw();
             player2.Draw();
+
+            _spriteBatch.Draw(black, wallRect, Color.White);
 
             _spriteBatch.End();
             

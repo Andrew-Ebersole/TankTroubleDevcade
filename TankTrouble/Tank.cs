@@ -153,6 +153,7 @@ namespace TankTrouble
 
         public void Intersect(Rectangle wall)
         {
+
             if (rect.Intersects(wall))
             {
 
@@ -160,8 +161,8 @@ namespace TankTrouble
                 // TODO
 
 
-
             }
+
         }
 
 
