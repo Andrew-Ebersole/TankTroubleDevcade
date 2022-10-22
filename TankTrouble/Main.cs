@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Threading.Tasks;
 
 namespace TankTrouble
 {
@@ -64,7 +65,7 @@ namespace TankTrouble
             wallRect = new Rectangle(150, 400, 30, 150);
 
 
-            testBall = new Balls(200, 200, 15, 200f, 200f, black);
+            testBall = new Balls(200, 200, 15, 200f, 200f, black, false);
 
 
             Globals.SpriteBatch = _spriteBatch;
@@ -156,6 +157,15 @@ namespace TankTrouble
             // Shoot
             if (kstate.IsKeyDown(Keys.C))
             {
+                //if (testBall.Active == false)
+                {
+                    testBall.X = player1.X + (int)(-5 + -45f * (Math.Sin(player1.Rotation)));
+                    testBall.Y = player1.Y + (int)(-5 + 45f * (Math.Cos(player1.Rotation)));
+                    testBall.XVelo = (int)(-200f*(Math.Sin(player1.Rotation))) ;
+                    testBall.YVelo = (int)(200f*(Math.Cos(player1.Rotation))) ;
+                    testBall.Active = true;
+                }
+                
 
             }
             // Ability
