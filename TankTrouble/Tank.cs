@@ -152,7 +152,7 @@ namespace TankTrouble
         /// </summary>
         /// <param name="wall"> The rectangle to check if the tank has collided with </param>
         /// <returns> boolean value if they are colliding </returns>
-        public bool Intersect(Rectangle wall)
+        public void Intersect(Rectangle wall)
         {
 
             if (hitbox.Intersects(wall))
@@ -160,11 +160,7 @@ namespace TankTrouble
                 velocity *= -2;
                 UpdatePosition();
                 velocity = 0;
-                return true;
-            }
-            else
-            {
-                return false;
+
             }
 
         }
