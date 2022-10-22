@@ -174,8 +174,8 @@ namespace TankTrouble
         /// </summary>
         public void UpdatePosition()
         {
-            X += -Velocity * (Math.Sin(Rotation));
-            Y += Velocity * (Math.Cos(Rotation));
+            X += (Globals.DeltaTime) * -Velocity * (Math.Sin(Rotation));
+            Y += (Globals.DeltaTime) * Velocity * (Math.Cos(Rotation));
             rect.X = (int)X;
             rect.Y = (int)Y;
             hitbox.X = (int)X - rect.Height / 2;

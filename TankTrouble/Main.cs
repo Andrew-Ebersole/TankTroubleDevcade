@@ -106,6 +106,9 @@ namespace TankTrouble
         /// <param name="gameTime">Amount of milliseconds since last update</param>
         protected override void Update(GameTime gameTime)
         {
+
+            Globals.GameTime = gameTime;
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             var kstate = Keyboard.GetState();
@@ -114,13 +117,14 @@ namespace TankTrouble
             // Forward
             if (kstate.IsKeyDown(Keys.W))
             {
-                player1.Velocity = 1;
+                player1.Velocity = 100;
             }
             // Backwards
             else if (kstate.IsKeyDown(Keys.S))
             {
-                player1.Velocity = -1;
-            } else
+                player1.Velocity = -100;
+            } 
+            else
             {
                 
                 if (player1.Intersect(wallRect))
@@ -157,12 +161,12 @@ namespace TankTrouble
             // Forward
             if (kstate.IsKeyDown(Keys.Up))
             {
-                player2.Velocity = 1;
+                player2.Velocity = 100;
             }
             // Backwards
             else if (kstate.IsKeyDown(Keys.Down))
             {
-                player2.Velocity = -1;
+                player2.Velocity = -100;
             }
             else
             {
@@ -197,6 +201,7 @@ namespace TankTrouble
             // Collision
             player1.Intersect(wallRect);
             player2.Intersect(wallRect);
+
             
             player1.Update();
             player2.Update();
