@@ -160,8 +160,8 @@ namespace TankTrouble
                 velocity *= -2;
                 UpdatePosition();
                 velocity = 0;
-
             }
+
 
         }
 
