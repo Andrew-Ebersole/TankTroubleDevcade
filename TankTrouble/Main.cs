@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Security.Cryptography.X509Certificates;
 
 namespace TankTrouble
 {
@@ -23,6 +22,7 @@ namespace TankTrouble
 
         private Texture2D texture;
 
+        Tank player1;
 
         /// <summary>
         /// Only happens at the beginning
@@ -53,6 +53,7 @@ namespace TankTrouble
             Globals.GraphicsDeviceManager = _graphics;
             Globals.ContentManager = Content;
 
+            player1 = new Tank(100, 100, 0, tankWidth, tankHeight, texture);
         }
 
         /// <summary>
@@ -84,22 +85,22 @@ namespace TankTrouble
             // Forward
             if (kstate.IsKeyDown(Keys.W))
             {
-                MoveTank(1);
+                player1.MoveTank(1);
             }
             // Backwards
             if (kstate.IsKeyDown(Keys.S))
             {
-                MoveTank(-1);
+                player1.MoveTank(-1);
             }
             // Turn Left
             if (kstate.IsKeyDown(Keys.A))
             {
-                tankRotation -= 0.06f;
+                player1.Rotation -= 0.06f;
             }
             // Turn Right
             if (kstate.IsKeyDown(Keys.D))
             {
-                tankRotation += 0.06f;
+                player1.Rotation += 0.06f;
             }
             // Shoot
             if (kstate.IsKeyDown(Keys.C))
@@ -110,14 +111,8 @@ namespace TankTrouble
             if (kstate.IsKeyDown(Keys.V))
             {
 
-            }
-            // Move Function
-            void MoveTank(int distance)
-            {
-                tankRect.X += -distance*(int)(10*Math.Sin(tankRotation));
-                tankRect.Y += distance*(int)(10*Math.Cos(tankRotation));
-            }
 
+            }
 
             // Player 2 Controls --- //
             // Forward
@@ -150,6 +145,11 @@ namespace TankTrouble
             {
 
             }
+
+
+            player1.Update();
+
+
             base.Update(gameTime);
         }
 
@@ -164,8 +164,9 @@ namespace TankTrouble
             _spriteBatch.Begin();
 
             // draw tank
-            _spriteBatch.Draw(texture, tankRect, null,  Color.White, tankRotation, new Vector2(0.5f ,0.5f), SpriteEffects.None, 1);
+            //_spriteBatch.Draw(texture, tankRect, null,  Color.White, tankRotation, new Vector2(0.5f ,0.5f), SpriteEffects.None, 1);
 
+            player1.Draw();
 
             _spriteBatch.End();
             
