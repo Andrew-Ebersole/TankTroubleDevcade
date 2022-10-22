@@ -48,6 +48,10 @@ namespace TankTrouble
             tankHeight = 120;
             tankRect = new Rectangle(100, 100, tankWidth, tankHeight);
 
+            Globals.SpriteBatch = _spriteBatch;
+            Globals.GraphicsDeviceManager = _graphics;
+            Globals.ContentManager = Content;
+
         }
 
         /// <summary>
@@ -58,6 +62,7 @@ namespace TankTrouble
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
 
+            // test blue texture
             texture = new Texture2D(GraphicsDevice, 1, 1);
             texture.SetData(new Color[] { Color.Blue });
 
@@ -157,7 +162,7 @@ namespace TankTrouble
 
             _spriteBatch.Begin();
 
-
+            // draw tank
             _spriteBatch.Draw(texture, tankRect, null,  Color.White, tankRotation, new Vector2(0.5f ,0.5f), SpriteEffects.None, 1);
 
 
