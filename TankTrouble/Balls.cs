@@ -43,7 +43,7 @@ namespace TankTrouble
         }
 
         // Methods
-        public void update()
+        public void update(Tank player1, Tank player2)
         {
             if (active)
             {

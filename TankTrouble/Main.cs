@@ -220,7 +220,7 @@ namespace TankTrouble
             player1.Intersect(wallRect);
             player2.Intersect(wallRect);
 
-            testBall.update();
+            testBall.update(player1, player2);
 
             player1.Update();
             player2.Update();

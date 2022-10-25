@@ -169,6 +169,14 @@ namespace TankTrouble
 
         }
 
+        public bool Hit(Rectangle ball)
+        {
+            if (hitbox.Intersects(ball))
+            {
+                return true;
+            }
+            return false;
+        }
         /// <summary>
         /// Moves the X and Y coordinates based on the rotation of the tank
         /// </summary>
