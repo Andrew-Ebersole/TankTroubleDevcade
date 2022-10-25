@@ -26,6 +26,10 @@ namespace TankTrouble
         private Rectangle hitbox;
         private Rectangle cannon;
 
+
+        // list of balls
+        private List<Balls> balls;
+
         private int ammo;
         private Texture2D texture;
    
@@ -118,6 +122,7 @@ namespace TankTrouble
             hitbox = new Rectangle((int)X - height / 2, (int)Y - height / 2, height, height);
             cannon = new Rectangle((int)X, (int)Y*2, width / 3, (int)height*1);
             this.texture = texture;
+            balls = new List<Balls>();
         }
 
 
@@ -133,6 +138,14 @@ namespace TankTrouble
             UpdatePosition();
 
             // change rectangle positions to new x and y
+
+            // update balls
+            for (int i = 0; i < balls.Count; i++)
+            {
+                balls[i].update();
+            }
+
+
         }
 
         /// <summary>
@@ -144,7 +157,34 @@ namespace TankTrouble
             Globals.SpriteBatch.Draw(texture, hitbox, null, Color.Black, 0, new Vector2(0, 0), SpriteEffects.None, 1);
             Globals.SpriteBatch.Draw(texture, Rectangle, null, Color.White, Rotation, new Vector2(0.5f, 0.5f), SpriteEffects.None, 1);
             Globals.SpriteBatch.Draw(texture, cannon, null, Color.White, Rotation, new Vector2(0.5f, 0f), SpriteEffects.None, 1);
+
+            // draw balls
+            for (int i = 0; i < balls.Count; i++)
+            {
+                Globals.SpriteBatch.Draw(texture, balls[i].ball, Color.White);
+            }
+
+
+            
         }
+
+
+        public void Shoot()
+        {
+            balls.Add(new Balls(
+
+                X + (int)(-5 + -45f * (Math.Sin(Rotation))),
+                Y + (int)(-5 + 45f * (Math.Cos(Rotation))),
+                15,
+                (int)(-200f * (Math.Sin(Rotation))),
+                (int)(200f * (Math.Cos(Rotation))),
+                texture,
+                true
+
+            ));
+
+        }
+
 
 
         /// <summary>
@@ -152,7 +192,7 @@ namespace TankTrouble
         /// </summary>
         /// <param name="wall"> The rectangle to check if the tank has collided with </param>
         /// <returns> boolean value if they are colliding </returns>
-        public bool Intersect(Rectangle wall)
+        public void Intersect(Rectangle wall)
         {
 
             if (hitbox.Intersects(wall))
@@ -160,12 +200,8 @@ namespace TankTrouble
                 velocity *= -2;
                 UpdatePosition();
                 velocity = 0;
-                return true;
             }
-            else
-            {
-                return false;
-            }
+
 
         }
 
@@ -182,8 +218,8 @@ namespace TankTrouble
         /// </summary>
         public void UpdatePosition()
         {
-            X += -Velocity * (Math.Sin(Rotation));
-            Y += Velocity * (Math.Cos(Rotation));
+            X += (Globals.DeltaTime) * -Velocity * (Math.Sin(Rotation));
+            Y += (Globals.DeltaTime) * Velocity * (Math.Cos(Rotation));
             rect.X = (int)X;
             rect.Y = (int)Y;
             hitbox.X = (int)X - rect.Height / 2;
