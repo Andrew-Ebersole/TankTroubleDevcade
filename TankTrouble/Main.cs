@@ -24,7 +24,6 @@ namespace TankTrouble
         private Rectangle wallRect;
 
 
-
         private int tankHeight;
         private int tankWidth;
 
@@ -36,6 +35,11 @@ namespace TankTrouble
 
         Tank player1;
         Tank player2;
+
+
+        // keyboard states
+        private KeyboardState currentKB;
+        private KeyboardState previousKB;
 
         /// <summary>
         /// Only happens at the beginning
@@ -121,7 +125,11 @@ namespace TankTrouble
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+
             var kstate = Keyboard.GetState();
+
+            currentKB = Keyboard.GetState();
 
             // Player 1 Controls --- //
             // Forward
@@ -152,19 +160,29 @@ namespace TankTrouble
             }
 
             // Shoot
-            if (kstate.IsKeyDown(Keys.C))
+
+            //if (kstate.IsKeyDown(Keys.C))
+
+            if (previousKB.IsKeyUp(Keys.C) && currentKB.IsKeyDown(Keys.C))
             {
+
+                player1.Shoot();
+
                 //if (testBall.Active == false)
-                {
-                    testBall.X = player1.X + (int)(-5 + -45f * (Math.Sin(player1.Rotation)));
-                    testBall.Y = player1.Y + (int)(-5 + 45f * (Math.Cos(player1.Rotation)));
-                    testBall.XVelo = (int)(-200f*(Math.Sin(player1.Rotation))) ;
-                    testBall.YVelo = (int)(200f*(Math.Cos(player1.Rotation))) ;
-                    testBall.Active = true;
-                }
+                //{
+
+
+
+                //    testBall.X = player1.X + (int)(-5 + -45f * (Math.Sin(player1.Rotation)));
+                //    testBall.Y = player1.Y + (int)(-5 + 45f * (Math.Cos(player1.Rotation)));
+                //    testBall.XVelo = (int)(-200f*(Math.Sin(player1.Rotation))) ;
+                //    testBall.YVelo = (int)(200f*(Math.Cos(player1.Rotation))) ;
+                //    testBall.Active = true;
+                //}
                 
 
             }
+
             // Ability
             if (kstate.IsKeyDown(Keys.V))
             {
@@ -199,9 +217,9 @@ namespace TankTrouble
                 player2.Rotation += 0.06f;
             }
             // Shoot
-            if (kstate.IsKeyDown(Keys.NumPad1))
+            if (previousKB.IsKeyUp(Keys.RightShift) && currentKB.IsKeyDown(Keys.RightShift))
             {
-
+                player2.Shoot();
             }
             // Ability
             if (kstate.IsKeyDown(Keys.NumPad2))
@@ -217,6 +235,8 @@ namespace TankTrouble
 
             player1.Update();
             player2.Update();
+
+            previousKB = currentKB;
 
             base.Update(gameTime);
         }
