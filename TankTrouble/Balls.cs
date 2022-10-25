@@ -12,20 +12,24 @@ namespace TankTrouble
     {
         // Fields
         public Rectangle ball;
-        double x;
-        double y;
-        float xVelo;
-        float yVelo;
-        int size;
+        private double x;
+        private double y;
+        private float xVelo;
+        private float yVelo;
+        private int size;
+        private bool active;
 
         private Texture2D texture;
 
         // Properties
-        double X { get { return x; } }
-        double Y { get { return y; } }
+        public double X { get { return x; } set { x = value; } }
+        public double Y { get { return y; } set { y = value; } }
+        public bool Active { get { return active; } set { active = value; } }
+        public float XVelo { get { return xVelo; } set { xVelo = value; } }
+        public float YVelo { get { return yVelo; } set { yVelo = value; } }
 
         // Constructor
-        public Balls(double x, double y, int size, float xVelo, float yVelo, Texture2D texture)
+        public Balls(double x, double y, int size, float xVelo, float yVelo, Texture2D texture, bool active)
         {
             this.xVelo = xVelo;
             this.yVelo = yVelo;
@@ -35,45 +39,41 @@ namespace TankTrouble
             ball = new Rectangle((int)X, (int)Y, size, size);
 
             this.texture = texture;
-
+            this.active = active;
         }
 
         // Methods
         public void update()
         {
-
-            x += xVelo * Globals.DeltaTime;
-            ball.X = (int)x;
-
-
-            y += yVelo * Globals.DeltaTime;
-            ball.Y = (int)y;
-
-
-            // top and bottom wall
-            if ( Y > Globals.WindowHeight - size || Y < 0 )
+            if (active)
             {
-                yVelo = yVelo * -1;
+                x += xVelo * Globals.DeltaTime;
+                ball.X = (int)x;
+
+
+                y += yVelo * Globals.DeltaTime;
+                ball.Y = (int)y;
+
+                // top and bottom wall
+                if (Y > Globals.WindowHeight - size || Y < 0)
+                {
+                    yVelo = yVelo * -1;
+                }
+
+                // left and right wall
+                if (X > Globals.WindowWidth - size || X < 0)
+                {
+                    xVelo = xVelo * -1;
+                }
             }
-
-            // left and right wall
-            if ( X > Globals.WindowWidth - size || X < 0)
-            {
-                xVelo = xVelo * -1;
-            }
-
-
-
-
-
-
         }
 
         public void Draw()
         {
-
-            Globals.SpriteBatch.Draw(texture, ball, Color.White);
-
+            if (active)
+            {
+                Globals.SpriteBatch.Draw(texture, ball, Color.White);
+            }
         }
     }
 }
