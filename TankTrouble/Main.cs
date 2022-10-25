@@ -69,7 +69,7 @@ namespace TankTrouble
             wallRect = new Rectangle(150, 400, 30, 150);
 
 
-            testBall = new Balls(200, 200, 15, 200f, 200f, black, false);
+            testBall = new Balls(200, 200, 15, 200f, 200f, black, 0);
 
 
             Globals.SpriteBatch = _spriteBatch;
@@ -227,11 +227,21 @@ namespace TankTrouble
 
             }
 
-            // Collision
+            // Colides with wall 
             player1.Intersect(wallRect);
             player2.Intersect(wallRect);
 
-            testBall.update(player1, player2);
+            // Colides with ball
+            for (int i = 0; i < player1.Balls.Count; i++)
+            {
+                player1.Hit(player1.Balls[i].ball);
+                player2.Hit(player1.Balls[i].ball);
+            }
+            for (int i = 0; i < player2.Balls.Count; i++)
+            {
+                player1.Hit(player2.Balls[i].ball);
+                player2.Hit(player2.Balls[i].ball);
+            }
 
             player1.Update();
             player2.Update();

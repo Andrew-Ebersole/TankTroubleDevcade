@@ -33,7 +33,8 @@ namespace TankTrouble
         private int ammo;
         private Texture2D texture;
    
-
+        // Used to keep track of player number
+        
 
 
         // Properties
@@ -52,7 +53,7 @@ namespace TankTrouble
             {
 
                 // if X value is within 0 and max height
-                if (value >= 0 && value <= Globals.GraphicsDeviceManager.PreferredBackBufferWidth)
+                if (value >= 0 + hitbox.Width / 2 && value <= Globals.GraphicsDeviceManager.PreferredBackBufferWidth - hitbox.Width / 2)
                 {
                     xPos = value;
                 }
@@ -78,7 +79,7 @@ namespace TankTrouble
             {
 
                 // if y value is within 0 and max height
-                if (value >= 0 && value <= Globals.GraphicsDeviceManager.PreferredBackBufferHeight)
+                if (value >= 0 + hitbox.Width / 2 && value <= Globals.GraphicsDeviceManager.PreferredBackBufferHeight - hitbox.Width / 2)
                 {
                     yPos = value;
                 }
@@ -103,8 +104,7 @@ namespace TankTrouble
         /// public property for rectangle
         /// </summary>
         public Rectangle Rectangle { get { return rect; } }
-
-
+        public List<Balls> Balls {  get { return balls; } }
 
         // Constructor
 
@@ -171,18 +171,20 @@ namespace TankTrouble
 
         public void Shoot()
         {
-            balls.Add(new Balls(
+            if (balls.Count < 10)
+            {
+                balls.Add(new Balls(
 
                 X + (int)(-5 + -45f * (Math.Sin(Rotation))),
                 Y + (int)(-5 + 45f * (Math.Cos(Rotation))),
-                15,
-                (int)(-200f * (Math.Sin(Rotation))),
-                (int)(200f * (Math.Cos(Rotation))),
+                12,
+                (int)(-250 * (Math.Sin(Rotation))),
+                (int)(250 * (Math.Cos(Rotation))),
                 texture,
-                true
+                10
 
             ));
-
+            }
         }
 
 
@@ -209,6 +211,8 @@ namespace TankTrouble
         {
             if (hitbox.Intersects(ball))
             {
+                xPos = 0;
+                yPos = 0;
                 return true;
             }
             return false;
