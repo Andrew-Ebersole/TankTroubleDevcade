@@ -163,9 +163,6 @@ namespace TankTrouble
             {
                 Globals.SpriteBatch.Draw(texture, balls[i].ball, Color.White);
             }
-
-
-            
         }
 
 
