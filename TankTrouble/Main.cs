@@ -161,25 +161,12 @@ namespace TankTrouble
 
             // Shoot
 
-            //if (kstate.IsKeyDown(Keys.C))
 
             if (previousKB.IsKeyUp(Keys.C) && currentKB.IsKeyDown(Keys.C))
             {
 
                 player1.Shoot();
-
-                //if (testBall.Active == false)
-                //{
-
-
-
-                //    testBall.X = player1.X + (int)(-5 + -45f * (Math.Sin(player1.Rotation)));
-                //    testBall.Y = player1.Y + (int)(-5 + 45f * (Math.Cos(player1.Rotation)));
-                //    testBall.XVelo = (int)(-200f*(Math.Sin(player1.Rotation))) ;
-                //    testBall.YVelo = (int)(200f*(Math.Cos(player1.Rotation))) ;
-                //    testBall.Active = true;
-                //}
-                
+            
 
             }
 

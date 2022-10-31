@@ -30,6 +30,9 @@ namespace TankTrouble
         // list of balls
         private List<Balls> balls;
 
+        // list of walls
+        //TODO
+
         private int ammo;
         private Texture2D texture;
    
