@@ -171,7 +171,7 @@ namespace TankTrouble
 
         public void Shoot()
         {
-            if (balls.Count < 10)
+            if (balls.Count < 1000)
             {
                 balls.Add(new Balls(
 
@@ -211,8 +211,8 @@ namespace TankTrouble
         {
             if (hitbox.Intersects(ball))
             {
-                xPos = 0;
-                yPos = 0;
+                xPos = 40;
+                yPos = 40;
                 return true;
             }
             return false;
