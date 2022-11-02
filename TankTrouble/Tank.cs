@@ -10,7 +10,7 @@ namespace TankTrouble
 {
     internal class Tank
     {
-        // Fields
+        // --- Fields --- //
 
         // position fields
         private double xPos;
@@ -40,7 +40,7 @@ namespace TankTrouble
         
 
 
-        // Properties
+        // --- Properties --- //
         
         /// <summary>
         /// public property for x position
@@ -109,8 +109,9 @@ namespace TankTrouble
         public Rectangle Rectangle { get { return rect; } }
         public List<Balls> Balls {  get { return balls; } }
 
-        // Constructor
 
+
+        // --- Constructor --- //
 
         public Tank(int x, int y, float rotation, int width, int height, Texture2D texture)
         {
@@ -129,7 +130,8 @@ namespace TankTrouble
         }
 
 
-        // Methods
+
+        // --- Methods --- //
 
         /// <summary>
         /// Updates logic every frame
@@ -146,6 +148,10 @@ namespace TankTrouble
             for (int i = 0; i < balls.Count; i++)
             {
                 balls[i].update();
+                if (balls[i].Life <= 0)
+                {
+                    balls.RemoveAt(i);
+                }
             }
 
 
@@ -171,7 +177,7 @@ namespace TankTrouble
 
         public void Shoot()
         {
-            if (balls.Count < 1000)
+            if (balls.Count < 10)
             {
                 balls.Add(new Balls(
 

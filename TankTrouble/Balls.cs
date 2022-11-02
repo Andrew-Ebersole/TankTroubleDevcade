@@ -10,7 +10,8 @@ namespace TankTrouble
 {
     internal class Balls
     {
-        // Fields
+        // --- Fields --- //
+
         public Rectangle ball;
         private double x;
         private double y;
@@ -18,17 +19,19 @@ namespace TankTrouble
         private float yVelo;
         private int size;
         private double life;
-
         private Texture2D texture;
 
-        // Properties
+
+        // --- Properties --- //
         public double X { get { return x; } set { x = value; } }
         public double Y { get { return y; } set { y = value; } }
         public double Life { get { return life; } set { life = value; } }
         public float XVelo { get { return xVelo; } set { xVelo = value; } }
         public float YVelo { get { return yVelo; } set { yVelo = value; } }
 
-        // Constructor
+
+
+        // --- Constructor --- //
         public Balls(double x, double y, int size, float xVelo, float yVelo, Texture2D texture, double life)
         {
             this.xVelo = xVelo;
@@ -42,7 +45,9 @@ namespace TankTrouble
             this.life = life;
         }
 
-        // Methods
+
+
+        // --- Methods --- //
         public void update()
         {
             if (life > 0)
