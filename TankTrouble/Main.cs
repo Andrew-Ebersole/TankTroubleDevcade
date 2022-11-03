@@ -55,7 +55,7 @@ namespace TankTrouble
         }
 
         /// <summary>
-        /// Imma be real i have no clue why this is here
+        /// set values for the variables
         /// </summary>
         protected override void Initialize()
         {
@@ -123,6 +123,7 @@ namespace TankTrouble
 
             Globals.GameTime = gameTime;
 
+            // close window if esc is pressed
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
@@ -131,23 +132,21 @@ namespace TankTrouble
 
             currentKB = Keyboard.GetState();
 
-            // Player 1 Controls --- //
+            // --- Player 1 Controls --- //
             // Forward
             if (kstate.IsKeyDown(Keys.W))
             {
-                player1.Velocity = 100;
+                player1.Velocity = 150;
             }
             // Backwards
             else if (kstate.IsKeyDown(Keys.S))
             {
-                player1.Velocity = -100;
+                player1.Velocity = -150;
             } 
             else
             {
                 player1.Velocity = 0;
             }
-
-
             // Turn Left
             if (kstate.IsKeyDown(Keys.A))
             {
@@ -158,41 +157,32 @@ namespace TankTrouble
             {
                 player1.Rotation += 0.06f;
             }
-
             // Shoot
-
-
             if (previousKB.IsKeyUp(Keys.C) && currentKB.IsKeyDown(Keys.C))
             {
-
                 player1.Shoot();
-            
-
             }
-
             // Ability
             if (kstate.IsKeyDown(Keys.V))
             {
-
-
+                // Not implemented RN
             }
 
-            // Player 2 Controls --- //
+            // --- Player 2 Controls --- //
             // Forward
             if (kstate.IsKeyDown(Keys.Up))
             {
-                player2.Velocity = 100;
+                player2.Velocity = 150;
             }
             // Backwards
             else if (kstate.IsKeyDown(Keys.Down))
             {
-                player2.Velocity = -100;
+                player2.Velocity = -150;
             }
             else
             {
                 player2.Velocity = 0;
             }
-
             // Turn Left
             if (kstate.IsKeyDown(Keys.Left))
             {
@@ -211,7 +201,7 @@ namespace TankTrouble
             // Ability
             if (kstate.IsKeyDown(Keys.NumPad2))
             {
-
+                // Not implemented RN
             }
 
             // Colides with wall 
@@ -221,15 +211,26 @@ namespace TankTrouble
             // Colides with ball
             for (int i = 0; i < player1.Balls.Count; i++)
             {
-                player1.Hit(player1.Balls[i].ball);
-                player2.Hit(player1.Balls[i].ball);
+                if (player1.Hit(player1.Balls[i].ball)){
+                    player1.RemoveBall(i);
+                }
+                if (player2.Hit(player1.Balls[i].ball)){
+                    player1.RemoveBall(i);
+                }
             }
             for (int i = 0; i < player2.Balls.Count; i++)
             {
-                player1.Hit(player2.Balls[i].ball);
-                player2.Hit(player2.Balls[i].ball);
+                if (player1.Hit(player2.Balls[i].ball))
+                {
+                    player2.RemoveBall(i);
+                }
+                if (player2.Hit(player2.Balls[i].ball))
+                {
+                    player2.RemoveBall(i);
+                }
             }
 
+            //Update Tanks
             player1.Update();
             player2.Update();
 
