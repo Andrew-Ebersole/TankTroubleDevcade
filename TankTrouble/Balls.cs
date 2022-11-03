@@ -74,11 +74,6 @@ namespace TankTrouble
                 // Drain Life
                 life -= Globals.DeltaTime;
                 
-                // Collision
-                //if (player1.Hit())
-                {
-
-                }
             } else
             {
                 // Remove Ball
@@ -93,6 +88,60 @@ namespace TankTrouble
             if (life > 0)
             {
                 Globals.SpriteBatch.Draw(texture, ball, Color.White);
+            }
+        }
+
+        public void Intersect(Rectangle wall)
+        {
+            int wallXMid = wall.X + wall.Width / 2;
+            int wallYMid = wall.Y + wall.Height / 2;
+
+            // If the tanks hitbox and wall are colliding
+            if (ball.Intersects(wall))
+            {
+                int xDistance;
+                int yDistance;
+
+                if (X > wallXMid)
+                {
+                    xDistance = (int)((X - ball.Width) - (wallXMid + wall.Width / 2));
+                }
+                else
+                {
+                    xDistance = (int)((X + ball.Width) - (wallXMid - wall.Width / 2));
+                }
+                if (Y > wallYMid)
+                {
+                    yDistance = (int)((Y - ball.Height) - (wallYMid + wall.Height / 2));
+                }
+                else
+                {
+                    yDistance = (int)((Y + ball.Height) - (wallYMid - wall.Height / 2));
+                }
+
+                if (Math.Abs(xDistance) > Math.Abs(yDistance))
+                {
+                    yVelo *= -1;
+                    if (Y > wallYMid)
+                    {
+                        Y = wallYMid + wall.Height / 2;
+                    } else
+                    {
+                        Y = wallYMid - wall.Height / 2 - ball.Height;
+                    }
+                }
+                else
+                {
+                    xVelo *= -1;
+                    if (X > wallXMid)
+                    {
+                        X = wallXMid + wall.Width / 2;
+                    }
+                    else
+                    {
+                        X = wallXMid - wall.Width / 2 - ball.Width;
+                    }
+                }
             }
         }
     }

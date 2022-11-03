@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace TankTrouble
@@ -18,10 +19,10 @@ namespace TankTrouble
         private Rectangle tankRect;
         private float tankRotation;
 
-
+        
         private Texture2D activeTexture;
 
-        private Rectangle wallRect;
+        private List<Rectangle> walls;
 
 
         private int tankHeight;
@@ -32,6 +33,8 @@ namespace TankTrouble
         private Texture2D blue;
         private Texture2D red;
         private Texture2D black;
+
+        private int size;
 
         Tank player1;
         Tank player2;
@@ -49,7 +52,7 @@ namespace TankTrouble
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = false;
-            int size = 1000;
+            size = 1000;
             _graphics.PreferredBackBufferHeight = size;
             _graphics.PreferredBackBufferWidth = 9*(size / 21 );
         }
@@ -66,11 +69,18 @@ namespace TankTrouble
             tankHeight = 50;
             tankRect = new Rectangle(100, 100, tankWidth, tankHeight);
 
-            wallRect = new Rectangle(150, 400, 30, 150);
-
-
+            walls = new List<Rectangle>();
+            walls.Add(new Rectangle(size*9/21 - 20, 0, 20, size - 120));
+            walls.Add(new Rectangle(0, size - 120, size * 9 / 21, 20));
+            walls.Add(new Rectangle(0, 0, 20, size - 120));
+            walls.Add(new Rectangle(0, 0, size * 9 / 21, 20));
+            walls.Add(new Rectangle(185, 415, 50, 50));
+            walls.Add(new Rectangle(185, 465, 20, 200));
+            walls.Add(new Rectangle(235, 415, 200, 20));
+            walls.Add(new Rectangle(300, 200, 110, 20));
+            walls.Add(new Rectangle(300, 100, 20, 100));
+            walls.Add(new Rectangle(20, 250, 200, 20));
             testBall = new Balls(200, 200, 15, 200f, 200f, black, 0);
-
 
             Globals.SpriteBatch = _spriteBatch;
             Globals.GraphicsDeviceManager = _graphics;
@@ -205,28 +215,39 @@ namespace TankTrouble
             }
 
             // Colides with wall 
-            player1.Intersect(wallRect);
-            player2.Intersect(wallRect);
+            for (int i = 0; i < walls.Count; i++)
+            {
+                player1.Intersect(walls[i]);
+                player2.Intersect(walls[i]);
+            }
 
             // Colides with ball
             for (int i = 0; i < player1.Balls.Count; i++)
             {
-                if (player1.Hit(player1.Balls[i].ball)){
-                    player1.RemoveBall(i);
-                }
-                if (player2.Hit(player1.Balls[i].ball)){
-                    player1.RemoveBall(i);
+                if (player1.Balls[i].Life <= 10)
+                {
+                    if (player1.Hit(player1.Balls[i].ball))
+                    {
+                        player1.RemoveBall(i);
+                    }
+                    if (player2.Hit(player1.Balls[i].ball))
+                    {
+                        player1.RemoveBall(i);
+                    }
                 }
             }
             for (int i = 0; i < player2.Balls.Count; i++)
             {
-                if (player1.Hit(player2.Balls[i].ball))
+                if (player2.Balls[i].Life <= 10)
                 {
-                    player2.RemoveBall(i);
-                }
-                if (player2.Hit(player2.Balls[i].ball))
-                {
-                    player2.RemoveBall(i);
+                    if (player1.Hit(player2.Balls[i].ball))
+                    {
+                        player2.RemoveBall(i);
+                    }
+                    if (player2.Hit(player2.Balls[i].ball))
+                    {
+                        player2.RemoveBall(i);
+                    }
                 }
             }
 
@@ -258,8 +279,10 @@ namespace TankTrouble
             //_spriteBatch.Draw(black, ballRect, Color.White);
 
             testBall.Draw();
-
-            _spriteBatch.Draw(activeTexture, wallRect, Color.White);
+            for (int i = 0; i < walls.Count; i++)
+            {
+                _spriteBatch.Draw(activeTexture, walls[i], Color.White);
+            }
 
             _spriteBatch.End();
             

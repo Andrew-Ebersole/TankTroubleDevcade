@@ -182,13 +182,13 @@ namespace TankTrouble
             {
                 balls.Add(new Balls(
 
-                X + (int)(-5 + -45f * (Math.Sin(Rotation))),
-                Y + (int)(-5 + 45f * (Math.Cos(Rotation))),
+                X + (int)(-5 + -30f * (Math.Sin(Rotation))),
+                Y + (int)(-5 + 30f * (Math.Cos(Rotation))),
                 12,
                 (int)(-350 * (Math.Sin(Rotation))),
                 (int)(350 * (Math.Cos(Rotation))),
                 texture,
-                10
+                10.08f
 
             ));
             }
@@ -253,6 +253,11 @@ namespace TankTrouble
                         xPos = wallXMid - wall.Width / 2 - hitbox.Width / 2;
                     }
                 }
+            }
+
+            for (int i = 0; i < balls.Count; i++)
+            {
+                Balls[i].Intersect(wall);
             }
         }
 
