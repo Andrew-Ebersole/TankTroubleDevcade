@@ -20,20 +20,15 @@ namespace TankTrouble
         // tank's velocity
         private float velocity;
 
-
         // Rect is drawn hitbox is used for collisions
         private Rectangle rect;
         private Rectangle hitbox;
         private Rectangle cannon;
 
-
         // list of balls
         private List<Balls> balls;
 
-        // list of walls
-        //TODO
-
-        private int ammo;
+        // texture
         private Texture2D texture;
 
         // tank deaths
@@ -46,39 +41,30 @@ namespace TankTrouble
         /// <summary>
         /// public property for x position
         /// </summary>
-        public double X { 
-
+        public double X 
+        { 
             get 
             { 
                 return xPos; 
             }
-
             set 
             {
-
                 // if X value is within 0 and max height
                 if (value >= 0 + hitbox.Width / 2 && value <= Globals.GraphicsDeviceManager.PreferredBackBufferWidth - hitbox.Width / 2)
                 {
                     xPos = value;
                 }
-
             }
-
-
         }
-        
         /// <summary>
         /// public property for y position
         /// </summary>
         public double Y
         {
-
             get
-
             {
                 return yPos;
             }
-
             set
             {
 
@@ -86,24 +72,17 @@ namespace TankTrouble
                 if (value >= 0 + hitbox.Width / 2 && value <= Globals.GraphicsDeviceManager.PreferredBackBufferHeight - hitbox.Width / 2)
                 {
                     yPos = value;
-                }
-                   
+                }      
             }
-
         }
-
         /// <summary>
         /// public property for velocity
         /// </summary>
         public float Velocity { get { return velocity; } set { velocity = value; } }
-
-
-
         /// <summary>
         /// public property for rotation
         /// </summary>
         public float Rotation { get { return rotation; } set { rotation = value; } }
-
         /// <summary>
         /// public property for rectangle
         /// </summary>
@@ -117,11 +96,11 @@ namespace TankTrouble
         public Tank(int x, int y, float rotation, int width, int height, Texture2D texture)
         {
             // TODO
-            // calculate starting rotation
             // enter calculated positions to rectangle construtor
             
             this.xPos = x;
             this.yPos = y;
+            this.rotation = rotation;
 
             rect = new Rectangle((int)X, (int)Y, width, height);
             hitbox = new Rectangle((int)X - height / 2, (int)Y - height / 2, height, height);
@@ -180,7 +159,7 @@ namespace TankTrouble
 
         public void Shoot()
         {
-            if (balls.Count < 10)
+            if (balls.Count < 4)
             {
                 balls.Add(new Balls(
 
@@ -190,7 +169,7 @@ namespace TankTrouble
                 (int)(-350 * (Math.Sin(Rotation))),
                 (int)(350 * (Math.Cos(Rotation))),
                 texture,
-                10.08f
+                4.08f
 
             ));
             }
