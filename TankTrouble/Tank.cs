@@ -35,9 +35,10 @@ namespace TankTrouble
 
         private int ammo;
         private Texture2D texture;
-   
-        // Used to keep track of player number
-        
+
+        // tank deaths
+        int deaths;
+
 
 
         // --- Properties --- //
@@ -127,6 +128,7 @@ namespace TankTrouble
             cannon = new Rectangle((int)X, (int)Y*2, width / 3, (int)height*1);
             this.texture = texture;
             balls = new List<Balls>();
+            deaths = 0;
         }
 
 
@@ -269,6 +271,7 @@ namespace TankTrouble
                 // TODO Make it so tanks actually die and stuff
                 xPos = 40;
                 yPos = 40;
+                deaths++;
                return true;
             }
             return false;
@@ -281,6 +284,7 @@ namespace TankTrouble
         public void RemoveBall(int ballIndex)
         {
             balls[ballIndex].Life = 0;
+
         }
 
 

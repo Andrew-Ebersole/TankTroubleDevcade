@@ -15,6 +15,7 @@ namespace TankTrouble
         // variables yay!
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private SpriteFont _font;
 
         private Rectangle tankRect;
         private float tankRotation;
@@ -113,6 +114,8 @@ namespace TankTrouble
             black = new Texture2D(GraphicsDevice, 1, 1);
             black.SetData(new Color[] { Color.Black });
 
+            // load font
+            _font = Content.Load<SpriteFont>("File");
 
             activeTexture = black;
 
@@ -284,8 +287,15 @@ namespace TankTrouble
                 _spriteBatch.Draw(activeTexture, walls[i], Color.White);
             }
 
+            // Text
+            _spriteBatch.DrawString(_font,
+                    "Press" +
+                    "\nSpace!" +
+                    "\nDont hit" +
+                    "\nthe floor",
+                    new Vector2(20, 20), Color.Green);
+
             _spriteBatch.End();
-            
 
             base.Draw(gameTime);
         }
