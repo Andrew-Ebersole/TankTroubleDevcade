@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace TankTrouble
@@ -14,15 +15,15 @@ namespace TankTrouble
         // variables yay!
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private SpriteFont _font;
 
         private Rectangle tankRect;
         private float tankRotation;
 
-
+        
         private Texture2D activeTexture;
 
-        private Rectangle wallRect;
-
+        private List<Rectangle> walls;
 
 
         private int tankHeight;
@@ -34,8 +35,15 @@ namespace TankTrouble
         private Texture2D red;
         private Texture2D black;
 
+        private int size;
+
         Tank player1;
         Tank player2;
+
+
+        // keyboard states
+        private KeyboardState currentKB;
+        private KeyboardState previousKB;
 
         /// <summary>
         /// Only happens at the beginning
@@ -45,13 +53,13 @@ namespace TankTrouble
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = false;
-            int size = 1000;
+            size = 1000;
             _graphics.PreferredBackBufferHeight = size;
             _graphics.PreferredBackBufferWidth = 9*(size / 21 );
         }
 
         /// <summary>
-        /// Imma be real i have no clue why this is here
+        /// set values for the variables
         /// </summary>
         protected override void Initialize()
         {
@@ -62,11 +70,18 @@ namespace TankTrouble
             tankHeight = 50;
             tankRect = new Rectangle(100, 100, tankWidth, tankHeight);
 
-            wallRect = new Rectangle(150, 400, 30, 150);
-
-
-            testBall = new Balls(200, 200, 15, 200f, 200f, black, false);
-
+            walls = new List<Rectangle>();
+            walls.Add(new Rectangle(size*9/21 - 20, 0, 20, size - 120));
+            walls.Add(new Rectangle(0, size - 120, size * 9 / 21, 20));
+            walls.Add(new Rectangle(0, 0, 20, size - 120));
+            walls.Add(new Rectangle(0, 0, size * 9 / 21, 20));
+            walls.Add(new Rectangle(185, 415, 50, 50));
+            walls.Add(new Rectangle(185, 465, 20, 200));
+            walls.Add(new Rectangle(235, 415, 200, 20));
+            walls.Add(new Rectangle(300, 200, 110, 20));
+            walls.Add(new Rectangle(300, 100, 20, 100));
+            walls.Add(new Rectangle(20, 250, 200, 20));
+            testBall = new Balls(200, 200, 15, 200f, 200f, black, 0);
 
             Globals.SpriteBatch = _spriteBatch;
             Globals.GraphicsDeviceManager = _graphics;
@@ -99,6 +114,8 @@ namespace TankTrouble
             black = new Texture2D(GraphicsDevice, 1, 1);
             black.SetData(new Color[] { Color.Black });
 
+            // load font
+            _font = Content.Load<SpriteFont>("File");
 
             activeTexture = black;
 
@@ -119,30 +136,30 @@ namespace TankTrouble
 
             Globals.GameTime = gameTime;
 
+            // close window if esc is pressed
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+
             var kstate = Keyboard.GetState();
 
-            // Player 1 Controls --- //
+            currentKB = Keyboard.GetState();
+
+            // --- Player 1 Controls --- //
             // Forward
             if (kstate.IsKeyDown(Keys.W))
             {
-                player1.Velocity = 1;
+                player1.Velocity = 150;
             }
             // Backwards
             else if (kstate.IsKeyDown(Keys.S))
             {
-                player1.Velocity = -1;
-            } else
+                player1.Velocity = -150;
+            } 
+            else
             {
-                
-                if (player1.Intersect(wallRect))
-                {
-                    player1.Velocity *= -2;
-                }
                 player1.Velocity = 0;
             }
-
             // Turn Left
             if (kstate.IsKeyDown(Keys.A))
             {
@@ -153,46 +170,30 @@ namespace TankTrouble
             {
                 player1.Rotation += 0.06f;
             }
-
             // Shoot
-            if (kstate.IsKeyDown(Keys.C))
+            if (previousKB.IsKeyUp(Keys.C) && currentKB.IsKeyDown(Keys.C))
             {
-                //if (testBall.Active == false)
-                {
-                    testBall.X = player1.X + (int)(-5 + -45f * (Math.Sin(player1.Rotation)));
-                    testBall.Y = player1.Y + (int)(-5 + 45f * (Math.Cos(player1.Rotation)));
-                    testBall.XVelo = (int)(-200f*(Math.Sin(player1.Rotation))) ;
-                    testBall.YVelo = (int)(200f*(Math.Cos(player1.Rotation))) ;
-                    testBall.Active = true;
-                }
-                
-
+                player1.Shoot();
             }
             // Ability
             if (kstate.IsKeyDown(Keys.V))
             {
-
-
+                // Not implemented RN
             }
 
-            // Player 2 Controls --- //
+            // --- Player 2 Controls --- //
             // Forward
             if (kstate.IsKeyDown(Keys.Up))
             {
-                player2.Velocity = 1;
+                player2.Velocity = 150;
             }
             // Backwards
             else if (kstate.IsKeyDown(Keys.Down))
             {
-                player2.Velocity = -1;
+                player2.Velocity = -150;
             }
             else
             {
-                if (player2.Intersect(wallRect))
-                {
-                    player2.Velocity *= -2;
-                    player2.UpdatePosition();
-                }
                 player2.Velocity = 0;
             }
             // Turn Left
@@ -206,24 +207,58 @@ namespace TankTrouble
                 player2.Rotation += 0.06f;
             }
             // Shoot
-            if (kstate.IsKeyDown(Keys.NumPad1))
+            if (previousKB.IsKeyUp(Keys.RightShift) && currentKB.IsKeyDown(Keys.RightShift))
             {
-
+                player2.Shoot();
             }
             // Ability
             if (kstate.IsKeyDown(Keys.NumPad2))
             {
-
+                // Not implemented RN
             }
 
-            // Collision
-            player1.Intersect(wallRect);
-            player2.Intersect(wallRect);
+            // Colides with wall 
+            for (int i = 0; i < walls.Count; i++)
+            {
+                player1.Intersect(walls[i]);
+                player2.Intersect(walls[i]);
+            }
 
-            testBall.update();
+            // Colides with ball
+            for (int i = 0; i < player1.Balls.Count; i++)
+            {
+                if (player1.Balls[i].Life <= 10)
+                {
+                    if (player1.Hit(player1.Balls[i].ball))
+                    {
+                        player1.RemoveBall(i);
+                    }
+                    if (player2.Hit(player1.Balls[i].ball))
+                    {
+                        player1.RemoveBall(i);
+                    }
+                }
+            }
+            for (int i = 0; i < player2.Balls.Count; i++)
+            {
+                if (player2.Balls[i].Life <= 10)
+                {
+                    if (player1.Hit(player2.Balls[i].ball))
+                    {
+                        player2.RemoveBall(i);
+                    }
+                    if (player2.Hit(player2.Balls[i].ball))
+                    {
+                        player2.RemoveBall(i);
+                    }
+                }
+            }
 
+            //Update Tanks
             player1.Update();
             player2.Update();
+
+            previousKB = currentKB;
 
             base.Update(gameTime);
         }
@@ -247,11 +282,20 @@ namespace TankTrouble
             //_spriteBatch.Draw(black, ballRect, Color.White);
 
             testBall.Draw();
+            for (int i = 0; i < walls.Count; i++)
+            {
+                _spriteBatch.Draw(activeTexture, walls[i], Color.White);
+            }
 
-            _spriteBatch.Draw(activeTexture, wallRect, Color.White);
+            // Text
+            _spriteBatch.DrawString(_font,
+                    "Press" +
+                    "\nSpace!" +
+                    "\nDont hit" +
+                    "\nthe floor",
+                    new Vector2(20, 20), Color.Green);
 
             _spriteBatch.End();
-            
 
             base.Draw(gameTime);
         }

@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\acebe\\Documents\\CodeProjects\\TankTroubleRepo\\TankTrouble\\TankTrouble.csproj": {}
+    "Z:\\IGMProfile\\Desktop\\Tanks\\TankTrouble\\TankTrouble.csproj": {}
   },
   "projects": {
-    "C:\\Users\\acebe\\Documents\\CodeProjects\\TankTroubleRepo\\TankTrouble\\TankTrouble.csproj": {
+    "Z:\\IGMProfile\\Desktop\\Tanks\\TankTrouble\\TankTrouble.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\acebe\\Documents\\CodeProjects\\TankTroubleRepo\\TankTrouble\\TankTrouble.csproj",
+        "projectUniqueName": "Z:\\IGMProfile\\Desktop\\Tanks\\TankTrouble\\TankTrouble.csproj",
         "projectName": "TankTrouble",
-        "projectPath": "C:\\Users\\acebe\\Documents\\CodeProjects\\TankTroubleRepo\\TankTrouble\\TankTrouble.csproj",
-        "packagesPath": "C:\\Users\\acebe\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\acebe\\Documents\\CodeProjects\\TankTroubleRepo\\TankTrouble\\obj\\",
+        "projectPath": "Z:\\IGMProfile\\Desktop\\Tanks\\TankTrouble\\TankTrouble.csproj",
+        "packagesPath": "D:\\Profiles\\ane5279\\.nuget\\packages\\",
+        "outputPath": "Z:\\IGMProfile\\Desktop\\Tanks\\TankTrouble\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\acebe\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "Z:\\IGMProfile\\AppData\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -55,8 +55,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -65,7 +64,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }
