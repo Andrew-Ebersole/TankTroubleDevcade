@@ -85,22 +85,23 @@ namespace TankTrouble
             walls.Add(new Rectangle(wallThickness, 0, 4*wallXGrid-wallThickness*2, wallThickness));
             walls.Add(new Rectangle(0, 0, wallThickness, 10*wallYGrid));
             walls.Add(new Rectangle(4*wallXGrid-wallThickness, 0, wallThickness, 10*wallYGrid));
-            walls.Add(new Rectangle(wallThickness, 10*wallYGrid - wallThickness, 4*wallXGrid-wallThickness*2, wallThickness));
-            walls.Add(new Rectangle(0, 1*wallYGrid, wallXGrid, wallThickness));
+            walls.Add(new Rectangle(0, 10*wallYGrid, 4*wallXGrid, wallThickness));
+            walls.Add(new Rectangle(0, 1*wallYGrid, wallXGrid+wallThickness, wallThickness));
             walls.Add(new Rectangle(2*wallXGrid, 0, wallThickness, wallYGrid));
-            walls.Add(new Rectangle(2*wallXGrid, wallYGrid, wallXGrid, wallThickness));
-            walls.Add(new Rectangle(wallXGrid+wallThickness, 2*wallYGrid, wallXGrid-wallThickness, wallThickness));
+            walls.Add(new Rectangle(2*wallXGrid, wallYGrid, wallXGrid+wallThickness, wallThickness));
+            walls.Add(new Rectangle(wallXGrid+wallThickness, 2*wallYGrid, wallXGrid, wallThickness));
             walls.Add(new Rectangle(wallXGrid, 2*wallYGrid, wallThickness, 3*wallYGrid));
             walls.Add(new Rectangle(3*wallXGrid, 2*wallYGrid, wallThickness, 3*wallYGrid));
             walls.Add(new Rectangle(2*wallXGrid+wallThickness, 3*wallYGrid, wallXGrid-wallThickness, wallThickness));
             walls.Add(new Rectangle(2*wallXGrid, 5*wallYGrid, wallThickness, wallYGrid));
-            walls.Add(new Rectangle(wallXGrid + wallThickness, 4 * wallYGrid, wallXGrid - wallThickness, wallThickness));
-            walls.Add(new Rectangle(2*wallXGrid, 6*wallYGrid, wallXGrid, wallThickness));
-            walls.Add(new Rectangle(wallXGrid, 6*wallYGrid, wallThickness, 3*wallYGrid));
-            walls.Add(new Rectangle(2 * wallXGrid, 7 * wallYGrid, wallThickness, 3 * wallYGrid));
-            walls.Add(new Rectangle(wallThickness, 8 * wallYGrid, wallXGrid - wallThickness, wallThickness));
+            walls.Add(new Rectangle(wallXGrid + wallThickness, 4 * wallYGrid, wallXGrid, wallThickness));
+            walls.Add(new Rectangle(2*wallXGrid, 6*wallYGrid, wallXGrid+wallThickness, wallThickness));
+            walls.Add(new Rectangle(wallXGrid, 6*wallYGrid, wallThickness, 2*wallYGrid));
+            walls.Add(new Rectangle(wallXGrid+wallThickness, 9 * wallYGrid, wallXGrid, wallThickness));
+            walls.Add(new Rectangle(2 * wallXGrid, 7 * wallYGrid, wallThickness, 2 * wallYGrid));
+            walls.Add(new Rectangle(wallThickness, 8 * wallYGrid, wallXGrid, wallThickness));
             walls.Add(new Rectangle(wallThickness + 2 * wallXGrid, 8*wallYGrid, wallXGrid, wallThickness));
-            walls.Add(new Rectangle(3 * wallXGrid, 9 * wallYGrid, wallXGrid, wallThickness));
+            walls.Add(new Rectangle(3 * wallXGrid+ wallThickness, 9 * wallYGrid, wallXGrid, wallThickness));;
 
             testBall = new Balls(200, 200, 15, 200f, 200f, black, 0);
 
@@ -110,10 +111,15 @@ namespace TankTrouble
             Globals.WindowWidth = _graphics.PreferredBackBufferWidth;
             Globals.WindowHeight = _graphics.PreferredBackBufferHeight;
 
-            
+            Vector2 p1Spawn;
+            p1Spawn.X = 60;
+            p1Spawn.Y = 40;
+            Vector2 p2Spawn;
+            p2Spawn.X = 300;
+            p2Spawn.Y = 800;
 
-            player1 = new Tank(100, 100, 0, tankWidth, tankHeight, blue);
-            player2 = new Tank(300, 800, 3.14f, tankWidth, tankHeight, red);
+            player1 = new Tank(100, 100, 0, tankWidth, tankHeight, blue, p1Spawn);
+            player2 = new Tank(300, 800, 3.14f, tankWidth, tankHeight, red, p2Spawn);
         }
 
         /// <summary>
@@ -137,7 +143,7 @@ namespace TankTrouble
             black.SetData(new Color[] { Color.Black });
 
             // load font
-            //_font = Content.Load<SpriteFont>("File");
+            _font = Content.Load<SpriteFont>("File");
 
             activeTexture = black;
 
@@ -310,12 +316,13 @@ namespace TankTrouble
             }
 
             // Text
-            //_spriteBatch.DrawString(_font,
-             //       "Press" +
-             //       "\nSpace!" +
-             //       "\nDont hit" +
-             //       "\nthe floor",
-             //       new Vector2(20, 20), Color.Green);
+            _spriteBatch.DrawString(_font,
+                   $"Tank 1: {player2.Deaths}",
+                   new Vector2(10, 940), Color.Blue);
+
+            _spriteBatch.DrawString(_font,
+                   $"Tank 2: {player1.Deaths}",
+                   new Vector2(220, 940), Color.Red);
 
             _spriteBatch.End();
 

@@ -123,3 +123,4 @@ Z:\IGMProfile\Desktop\Tanks\TankTrouble\obj\Debug\net6.0\refint\TankTrouble.dll
 Z:\IGMProfile\Desktop\Tanks\TankTrouble\obj\Debug\net6.0\TankTrouble.pdb
 Z:\IGMProfile\Desktop\Tanks\TankTrouble\obj\Debug\net6.0\TankTrouble.genruntimeconfig.cache
 Z:\IGMProfile\Desktop\Tanks\TankTrouble\obj\Debug\net6.0\ref\TankTrouble.dll
+C:\Users\acebe\OneDrive\Desktop\TANKS\TankTrouble\bin\Debug\net6.0\Content\File.xnb

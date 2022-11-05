@@ -16,6 +16,7 @@ namespace TankTrouble
         private double xPos;
         private double yPos;
         private float rotation;
+        private Vector2 spawnCords;
 
         // tank's velocity
         private float velocity;
@@ -88,18 +89,18 @@ namespace TankTrouble
         /// </summary>
         public Rectangle Rectangle { get { return rect; } }
         public List<Balls> Balls {  get { return balls; } }
-
-
+        public int Deaths { get { return deaths; } }
 
         // --- Constructor --- //
 
-        public Tank(int x, int y, float rotation, int width, int height, Texture2D texture)
+        public Tank(int x, int y, float rotation, int width, int height, Texture2D texture, Vector2 spawnCords)
         {
             // TODO
             // enter calculated positions to rectangle construtor
             
-            this.xPos = x;
-            this.yPos = y;
+            this.spawnCords = spawnCords;
+            this.xPos = spawnCords.X;
+            this.yPos = spawnCords.Y;
             this.rotation = rotation;
 
             rect = new Rectangle((int)X, (int)Y, width, height);
@@ -248,8 +249,8 @@ namespace TankTrouble
             if (hitbox.Intersects(ball))
             {
                 // TODO Make it so tanks actually die and stuff
-                xPos = 40;
-                yPos = 40;
+                xPos = spawnCords.X;
+                yPos = spawnCords.Y;
                 deaths++;
                return true;
             }
