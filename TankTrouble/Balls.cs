@@ -23,6 +23,7 @@ namespace TankTrouble
 
 
         // --- Properties --- //
+
         public double X { get { return x; } set { x = value; } }
         public double Y { get { return y; } set { y = value; } }
         public double Life { get { return life; } set { life = value; } }
@@ -32,6 +33,17 @@ namespace TankTrouble
 
 
         // --- Constructor --- //
+
+        /// <summary>
+        /// Initalizes the ball
+        /// </summary>
+        /// <param name="x"> starting X position </param>
+        /// <param name="y"> starting Y position </param>
+        /// <param name="size"> size of the ball in pixels </param>
+        /// <param name="xVelo"> speed that the ball is moving horizontally </param>
+        /// <param name="yVelo"> speed that the ball is moving vertically </param>
+        /// <param name="texture"> 2D texture of the ball to use </param>
+        /// <param name="life"> amount of seconds the ball will last for </param>
         public Balls(double x, double y, int size, float xVelo, float yVelo, Texture2D texture, double life)
         {
             this.xVelo = xVelo;
@@ -48,6 +60,10 @@ namespace TankTrouble
 
 
         // --- Methods --- //
+
+        /// <summary>
+        /// Updates ball position
+        /// </summary>
         public void update()
         {
             if (life > 0)
@@ -83,6 +99,9 @@ namespace TankTrouble
             
         }
 
+        /// <summary>
+        /// Draws the ball on the screen
+        /// </summary>
         public void Draw()
         {
             if (life > 0)
@@ -91,6 +110,10 @@ namespace TankTrouble
             }
         }
 
+        /// <summary>
+        /// Checks if the ball is intersecting the wall and makes the ball bounce off the wall
+        /// </summary>
+        /// <param name="wall"> the rectangle to bounce off of </param>
         public void Intersect(Rectangle wall)
         {
             int wallXMid = wall.X + wall.Width / 2;

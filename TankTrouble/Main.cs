@@ -15,6 +15,7 @@ namespace TankTrouble
         // variables yay!
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private SpriteFont _font;
 
         private Rectangle tankRect;
         private float tankRotation;
@@ -35,6 +36,11 @@ namespace TankTrouble
         private Texture2D black;
 
         private int size;
+
+        //Wall grid 
+        int wallXGrid;
+        int wallYGrid;
+        int wallThickness;
 
         Tank player1;
         Tank player2;
@@ -69,17 +75,33 @@ namespace TankTrouble
             tankHeight = 50;
             tankRect = new Rectangle(100, 100, tankWidth, tankHeight);
 
+            // Wall Grid
+            wallThickness = 15;
+            wallXGrid = 424 / 4;
+            wallYGrid = 900 / 10;
+
+            // Adding walls lmao
             walls = new List<Rectangle>();
-            walls.Add(new Rectangle(size*9/21 - 20, 0, 20, size - 120));
-            walls.Add(new Rectangle(0, size - 120, size * 9 / 21, 20));
-            walls.Add(new Rectangle(0, 0, 20, size - 120));
-            walls.Add(new Rectangle(0, 0, size * 9 / 21, 20));
-            walls.Add(new Rectangle(185, 415, 50, 50));
-            walls.Add(new Rectangle(185, 465, 20, 200));
-            walls.Add(new Rectangle(235, 415, 200, 20));
-            walls.Add(new Rectangle(300, 200, 110, 20));
-            walls.Add(new Rectangle(300, 100, 20, 100));
-            walls.Add(new Rectangle(20, 250, 200, 20));
+            walls.Add(new Rectangle(wallThickness, 0, 4*wallXGrid-wallThickness*2, wallThickness));
+            walls.Add(new Rectangle(0, 0, wallThickness, 10*wallYGrid));
+            walls.Add(new Rectangle(4*wallXGrid-wallThickness, 0, wallThickness, 10*wallYGrid));
+            walls.Add(new Rectangle(wallThickness, 10*wallYGrid - wallThickness, 4*wallXGrid-wallThickness*2, wallThickness));
+            walls.Add(new Rectangle(0, 1*wallYGrid, wallXGrid, wallThickness));
+            walls.Add(new Rectangle(2*wallXGrid, 0, wallThickness, wallYGrid));
+            walls.Add(new Rectangle(2*wallXGrid, wallYGrid, wallXGrid, wallThickness));
+            walls.Add(new Rectangle(wallXGrid+wallThickness, 2*wallYGrid, wallXGrid-wallThickness, wallThickness));
+            walls.Add(new Rectangle(wallXGrid, 2*wallYGrid, wallThickness, 3*wallYGrid));
+            walls.Add(new Rectangle(3*wallXGrid, 2*wallYGrid, wallThickness, 3*wallYGrid));
+            walls.Add(new Rectangle(2*wallXGrid+wallThickness, 3*wallYGrid, wallXGrid-wallThickness, wallThickness));
+            walls.Add(new Rectangle(2*wallXGrid, 5*wallYGrid, wallThickness, wallYGrid));
+            walls.Add(new Rectangle(wallXGrid + wallThickness, 4 * wallYGrid, wallXGrid - wallThickness, wallThickness));
+            walls.Add(new Rectangle(2*wallXGrid, 6*wallYGrid, wallXGrid, wallThickness));
+            walls.Add(new Rectangle(wallXGrid, 6*wallYGrid, wallThickness, 3*wallYGrid));
+            walls.Add(new Rectangle(2 * wallXGrid, 7 * wallYGrid, wallThickness, 3 * wallYGrid));
+            walls.Add(new Rectangle(wallThickness, 8 * wallYGrid, wallXGrid - wallThickness, wallThickness));
+            walls.Add(new Rectangle(wallThickness + 2 * wallXGrid, 8*wallYGrid, wallXGrid, wallThickness));
+            walls.Add(new Rectangle(3 * wallXGrid, 9 * wallYGrid, wallXGrid, wallThickness));
+
             testBall = new Balls(200, 200, 15, 200f, 200f, black, 0);
 
             Globals.SpriteBatch = _spriteBatch;
@@ -88,9 +110,10 @@ namespace TankTrouble
             Globals.WindowWidth = _graphics.PreferredBackBufferWidth;
             Globals.WindowHeight = _graphics.PreferredBackBufferHeight;
 
+            
 
             player1 = new Tank(100, 100, 0, tankWidth, tankHeight, blue);
-            player2 = new Tank(300, 800, 0, tankWidth, tankHeight, red);
+            player2 = new Tank(300, 800, 3.14f, tankWidth, tankHeight, red);
         }
 
         /// <summary>
@@ -113,6 +136,8 @@ namespace TankTrouble
             black = new Texture2D(GraphicsDevice, 1, 1);
             black.SetData(new Color[] { Color.Black });
 
+            // load font
+            //_font = Content.Load<SpriteFont>("File");
 
             activeTexture = black;
 
@@ -224,7 +249,7 @@ namespace TankTrouble
             // Colides with ball
             for (int i = 0; i < player1.Balls.Count; i++)
             {
-                if (player1.Balls[i].Life <= 10)
+                if (player1.Balls[i].Life <= 4)
                 {
                     if (player1.Hit(player1.Balls[i].ball))
                     {
@@ -238,7 +263,7 @@ namespace TankTrouble
             }
             for (int i = 0; i < player2.Balls.Count; i++)
             {
-                if (player2.Balls[i].Life <= 10)
+                if (player2.Balls[i].Life <= 4)
                 {
                     if (player1.Hit(player2.Balls[i].ball))
                     {
@@ -284,8 +309,15 @@ namespace TankTrouble
                 _spriteBatch.Draw(activeTexture, walls[i], Color.White);
             }
 
+            // Text
+            //_spriteBatch.DrawString(_font,
+             //       "Press" +
+             //       "\nSpace!" +
+             //       "\nDont hit" +
+             //       "\nthe floor",
+             //       new Vector2(20, 20), Color.Green);
+
             _spriteBatch.End();
-            
 
             base.Draw(gameTime);
         }
