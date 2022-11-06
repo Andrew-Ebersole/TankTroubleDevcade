@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,6 +36,8 @@ namespace TankTrouble
         // tank deaths
         int deaths;
 
+        // Rng
+        Random rng;
 
 
         // --- Properties --- //
@@ -109,6 +112,7 @@ namespace TankTrouble
             this.texture = texture;
             balls = new List<Balls>();
             deaths = 0;
+            rng = new Random();
         }
 
 
@@ -164,13 +168,13 @@ namespace TankTrouble
             {
                 balls.Add(new Balls(
 
-                X + (int)(-5 + -30f * (Math.Sin(Rotation))),
-                Y + (int)(-5 + 30f * (Math.Cos(Rotation))),
+                X + (int)(-5 + -20f * (Math.Sin(Rotation))),
+                Y + (int)(-5 + 20f * (Math.Cos(Rotation))),
                 12,
                 (int)(-350 * (Math.Sin(Rotation))),
                 (int)(350 * (Math.Cos(Rotation))),
                 texture,
-                4.08f
+                4.12f
 
             ));
             }
@@ -249,8 +253,8 @@ namespace TankTrouble
             if (hitbox.Intersects(ball))
             {
                 // TODO Make it so tanks actually die and stuff
-                xPos = spawnCords.X;
-                yPos = spawnCords.Y;
+                xPos = rng.Next(30,400);
+                yPos = rng.Next(30,840);
                 deaths++;
                return true;
             }
