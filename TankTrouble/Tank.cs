@@ -168,11 +168,11 @@ namespace TankTrouble
             {
                 balls.Add(new Balls(
 
-                X + (int)(-5 + -20f * (Math.Sin(Rotation))),
-                Y + (int)(-5 + 20f * (Math.Cos(Rotation))),
-                12,
-                (int)(-350 * (Math.Sin(Rotation))),
-                (int)(350 * (Math.Cos(Rotation))),
+                X + (int)(-5 + -15f * (Math.Sin(Rotation))),
+                Y + (int)(-5 + 15f * (Math.Cos(Rotation))),
+                8,
+                (int)(-300 * (Math.Sin(Rotation))),
+                (int)(300 * (Math.Cos(Rotation))),
                 texture,
                 4.12f
 
