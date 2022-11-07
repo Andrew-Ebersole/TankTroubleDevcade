@@ -144,7 +144,7 @@ namespace TankTrouble
 
                 if (Math.Abs(xDistance) > Math.Abs(yDistance))
                 {
-                    yVelo *= -1;
+                    
                     if (Y > wallYMid)
                     {
                         Y = wallYMid + wall.Height / 2;
@@ -152,10 +152,11 @@ namespace TankTrouble
                     {
                         Y = wallYMid - wall.Height / 2 - ball.Height;
                     }
+                    yVelo *= -1;
                 }
-                else
+                else if (Math.Abs(xDistance) < Math.Abs(yDistance))
                 {
-                    xVelo *= -1;
+                    
                     if (X > wallXMid)
                     {
                         X = wallXMid + wall.Width / 2;
@@ -164,6 +165,27 @@ namespace TankTrouble
                     {
                         X = wallXMid - wall.Width / 2 - ball.Width;
                     }
+                    xVelo *= -1;
+                } else
+                {
+                    if (Y > wallYMid)
+                    {
+                        Y = wallYMid + wall.Height / 2;
+                    }
+                    else
+                    {
+                        Y = wallYMid - wall.Height / 2 - ball.Height;
+                    }
+                    if (X > wallXMid)
+                    {
+                        X = wallXMid + wall.Width / 2;
+                    }
+                    else
+                    {
+                        X = wallXMid - wall.Width / 2 - ball.Width;
+                    }
+                    xVelo *= -1;
+                    yVelo *= -1;
                 }
             }
         }
