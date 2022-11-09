@@ -36,6 +36,7 @@ namespace TankTrouble
         private Texture2D black;
 
         private int size;
+        private float newRoundDelay;
 
         //Wall grid 
         int wallXGrid;
@@ -45,7 +46,7 @@ namespace TankTrouble
         Tank player1;
         Tank player2;
 
-
+        Random rng;
         // keyboard states
         private KeyboardState currentKB;
         private KeyboardState previousKB;
@@ -73,16 +74,14 @@ namespace TankTrouble
 
             tankWidth = 30;
             tankHeight = 38;
-            tankRect = new Rectangle(100, 100, tankWidth, tankHeight);
+            //tankRect = new Rectangle(100, 100, tankWidth, tankHeight);
 
             // Wall Grid
             wallThickness = 10;
-            wallXGrid = 424 / 4;
-            wallYGrid = 900 / 10;
+            wallXGrid = (424-wallThickness) / 4;
+            wallYGrid = (900-wallThickness) / 10;
 
-            // Adding walls lmao
-            GenerateWalls(0);
-
+            rng = new Random();
 
             testBall = new Balls(200, 200, 15, 200f, 200f, black, 0);
 
@@ -92,15 +91,11 @@ namespace TankTrouble
             Globals.WindowWidth = _graphics.PreferredBackBufferWidth;
             Globals.WindowHeight = _graphics.PreferredBackBufferHeight;
 
-            Vector2 p1Spawn;
-            p1Spawn.X = 60;
-            p1Spawn.Y = 40;
-            Vector2 p2Spawn;
-            p2Spawn.X = 300;
-            p2Spawn.Y = 800;
+            player1 = new Tank(100, 100, 0, tankWidth, tankHeight, blue, false);
+            player2 = new Tank(300, 800, 3.14f, tankWidth, tankHeight, red, false);
 
-            player1 = new Tank(100, 100, 0, tankWidth, tankHeight, blue, p1Spawn);
-            player2 = new Tank(300, 800, 3.14f, tankWidth, tankHeight, red, p2Spawn);
+            NewRound();
+
         }
 
         /// <summary>
@@ -129,11 +124,6 @@ namespace TankTrouble
             activeTexture = black;
 
         }
-
-
-
-        // if hit wall when positive velocity
-
 
         /// <summary>
         /// Used for the logic parts of the code like calculating velocity
@@ -187,7 +177,7 @@ namespace TankTrouble
             // Ability
             if (kstate.IsKeyDown(Keys.V))
             {
-                // Not implemented RN
+                NewRound();
             }
 
             // --- Player 2 Controls --- //
@@ -262,10 +252,20 @@ namespace TankTrouble
                     }
                 }
             }
-
             //Update Tanks
             player1.Update();
             player2.Update();
+
+            if (!player1.Alive || !player2.Alive)
+            {
+                newRoundDelay -= Globals.GameTime.ElapsedGameTime.Milliseconds;
+                if (newRoundDelay <= 0)
+                {
+
+                    NewRound();
+                    
+                }
+            }
 
             previousKB = currentKB;
 
@@ -310,13 +310,19 @@ namespace TankTrouble
             base.Draw(gameTime);
         }
 
+        /// <summary>
+        /// Creates a list full of rectangles containing the walls for the maps
+        /// If a map outside of the list is selected it will draw a map with only border walls
+        /// </summary>
+        /// <param name="map"> The number of map to draw starting at 0</param>
         public void GenerateWalls(int map)
         {
             walls = new List<Rectangle>();
-            walls.Add(new Rectangle(wallThickness, 0, 4 * wallXGrid - wallThickness * 2, wallThickness));
+            walls.Clear();
+            walls.Add(new Rectangle(wallThickness, 0, 4 * wallXGrid, wallThickness));
             walls.Add(new Rectangle(0, 0, wallThickness, 10 * wallYGrid));
-            walls.Add(new Rectangle(4 * wallXGrid - wallThickness, 0, wallThickness, 10 * wallYGrid));
-            walls.Add(new Rectangle(0, 10 * wallYGrid, 4 * wallXGrid, wallThickness));
+            walls.Add(new Rectangle(4 * wallXGrid, 0, wallThickness, 10 * wallYGrid));
+            walls.Add(new Rectangle(0, 10 * wallYGrid, 4 * wallXGrid + wallThickness, wallThickness));
 
             switch (map)
             {
@@ -339,9 +345,71 @@ namespace TankTrouble
                     walls.Add(new Rectangle(3 * wallXGrid + wallThickness, 9 * wallYGrid, wallXGrid, wallThickness)); ;
                     break;
 
+                case 1:
+                    walls.Add(new Rectangle(wallXGrid, wallYGrid, wallThickness, wallYGrid));
+                    walls.Add(new Rectangle(3 * wallXGrid, wallYGrid, wallThickness, wallYGrid));
+                    walls.Add(new Rectangle(wallThickness, 2 * wallYGrid, wallXGrid, wallThickness));
+                    walls.Add(new Rectangle(3 * wallXGrid, 2 * wallYGrid, wallXGrid, wallThickness));
+                    walls.Add(new Rectangle(2 * wallXGrid, 2 * wallYGrid, wallThickness, wallYGrid));
+                    walls.Add(new Rectangle(wallXGrid, 3 * wallYGrid, 2 * wallXGrid, wallThickness));
+                    walls.Add(new Rectangle(wallXGrid, 3 * wallYGrid, wallThickness, wallYGrid));
+                    walls.Add(new Rectangle(3 * wallXGrid, 3 * wallYGrid, wallThickness, wallYGrid));
+                    walls.Add(new Rectangle(wallThickness, 5 * wallYGrid, wallXGrid, wallThickness));
+                    walls.Add(new Rectangle(3 * wallXGrid, 5 * wallYGrid, wallXGrid, wallThickness));
+                    walls.Add(new Rectangle(wallXGrid, 6 * wallYGrid, wallThickness, wallYGrid));
+                    walls.Add(new Rectangle(3 * wallXGrid, 6 * wallYGrid, wallThickness, wallYGrid));
+                    walls.Add(new Rectangle(2 * wallXGrid, 7 * wallYGrid, wallThickness, wallYGrid));
+                    walls.Add(new Rectangle(wallXGrid, 7 * wallYGrid, 2 * wallXGrid + wallThickness, wallThickness));
+                    walls.Add(new Rectangle(wallThickness, 8 * wallYGrid, wallXGrid, wallThickness));
+                    walls.Add(new Rectangle(3 * wallXGrid, 8 * wallYGrid, wallXGrid, wallThickness));
+                    walls.Add(new Rectangle(wallXGrid, 8 * wallYGrid, wallThickness, wallYGrid));
+                    walls.Add(new Rectangle(3 * wallXGrid, 8 * wallYGrid, wallThickness, wallYGrid));
+                    break;
+
+                case 2:
+                    walls.Add(new Rectangle(2 * wallXGrid, wallThickness, wallThickness, wallYGrid));
+                    walls.Add(new Rectangle(wallXGrid, wallYGrid, wallXGrid, wallThickness));
+                    walls.Add(new Rectangle(3 * wallXGrid, wallYGrid, wallThickness, 2 * wallYGrid));
+                    walls.Add(new Rectangle(wallThickness, 2 * wallYGrid, wallXGrid, wallThickness));
+                    walls.Add(new Rectangle(2 * wallXGrid, 2 * wallYGrid, wallXGrid, wallThickness));
+                    walls.Add(new Rectangle(wallXGrid, 3 * wallYGrid, 2 * wallXGrid + wallThickness, wallThickness));
+                    walls.Add(new Rectangle(wallXGrid, 4 * wallYGrid, wallThickness, wallYGrid));
+                    walls.Add(new Rectangle(wallXGrid + wallThickness, 4 * wallYGrid, wallXGrid - wallThickness, wallThickness));
+                    walls.Add(new Rectangle(3 * wallXGrid, 4 * wallYGrid, wallThickness, wallYGrid));
+                    walls.Add(new Rectangle(wallThickness, 5 * wallYGrid, wallXGrid, wallThickness));
+                    walls.Add(new Rectangle(3 * wallXGrid, 5 * wallYGrid, wallXGrid, wallThickness));
+                    walls.Add(new Rectangle(wallXGrid, 6 * wallYGrid, wallThickness, wallYGrid));
+                    walls.Add(new Rectangle(3 * wallXGrid, 6 * wallYGrid, wallThickness, wallYGrid));
+                    walls.Add(new Rectangle(wallXGrid, 8 * wallYGrid, wallThickness, wallYGrid));
+                    walls.Add(new Rectangle(3 * wallXGrid, 8 * wallYGrid, wallThickness, wallYGrid));
+
+                    break;
+
                 default:
                     break;
             }  
+        }
+
+        public void NewRound()
+        {
+            if (player1.Alive && !player2.Alive)
+            {
+                player2.Deaths += 1;
+            }
+            if (player2.Alive && !player1.Alive)
+            {
+                player1.Deaths += 1;
+            }
+            newRoundDelay = 4000.0f;
+            player1.Balls.Clear();
+            GenerateWalls(rng.Next(0,3));
+            player1.Alive = true;
+            player1.X = rng.Next(50, 400);
+            player1.Y = rng.Next(30, 840);
+            player2.Balls.Clear();
+            player2.Alive = true;
+            player2.X = rng.Next(50, 400);
+            player2.Y = rng.Next(30, 840);
         }
     }
 }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\acebe\\OneDrive\\Desktop\\TANKS\\TankTrouble\\TankTrouble.csproj": {}
+    "C:\\Users\\acebe\\Documents\\CodeProjects\\TankTroubleRepo\\TankTrouble\\TankTrouble.csproj": {}
   },
   "projects": {
-    "C:\\Users\\acebe\\OneDrive\\Desktop\\TANKS\\TankTrouble\\TankTrouble.csproj": {
+    "C:\\Users\\acebe\\Documents\\CodeProjects\\TankTroubleRepo\\TankTrouble\\TankTrouble.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\acebe\\OneDrive\\Desktop\\TANKS\\TankTrouble\\TankTrouble.csproj",
+        "projectUniqueName": "C:\\Users\\acebe\\Documents\\CodeProjects\\TankTroubleRepo\\TankTrouble\\TankTrouble.csproj",
         "projectName": "TankTrouble",
-        "projectPath": "C:\\Users\\acebe\\OneDrive\\Desktop\\TANKS\\TankTrouble\\TankTrouble.csproj",
+        "projectPath": "C:\\Users\\acebe\\Documents\\CodeProjects\\TankTroubleRepo\\TankTrouble\\TankTrouble.csproj",
         "packagesPath": "C:\\Users\\acebe\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\acebe\\OneDrive\\Desktop\\TANKS\\TankTrouble\\obj\\",
+        "outputPath": "C:\\Users\\acebe\\Documents\\CodeProjects\\TankTroubleRepo\\TankTrouble\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\acebe\\AppData\\Roaming\\NuGet\\NuGet.Config",

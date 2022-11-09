@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "U4g+fA0dNb+rh2ODnpy9ImNwVIFXnt2LgHZb2/DZDf2vnP2T2H+NX3QJfao01CffLQ2mA/AQmkFSi7JoQIySCA==",
+  "dgSpecHash": "LYZagyg91wsSBiwQ/xv8drIkZLFeHnMfsn6w3Re5h4QSZ23LRzHD8iCCxQWU3IMvMFf6BYfz6hTDmKSHDPy7mg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\acebe\\OneDrive\\Desktop\\TANKS\\TankTrouble\\TankTrouble.csproj",
+  "projectFilePath": "C:\\Users\\acebe\\Documents\\CodeProjects\\TankTroubleRepo\\TankTrouble\\TankTrouble.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\acebe\\.nuget\\packages\\monogame.content.builder.task\\3.8.1.303\\monogame.content.builder.task.3.8.1.303.nupkg.sha512",
     "C:\\Users\\acebe\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.1.303\\monogame.framework.desktopgl.3.8.1.303.nupkg.sha512"
