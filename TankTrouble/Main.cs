@@ -71,12 +71,12 @@ namespace TankTrouble
 
             base.Initialize();
 
-            tankWidth = 40;
-            tankHeight = 50;
+            tankWidth = 30;
+            tankHeight = 38;
             tankRect = new Rectangle(100, 100, tankWidth, tankHeight);
 
             // Wall Grid
-            wallThickness = 15;
+            wallThickness = 10;
             wallXGrid = 424 / 4;
             wallYGrid = 900 / 10;
 
@@ -338,9 +338,10 @@ namespace TankTrouble
                     walls.Add(new Rectangle(wallThickness + 2 * wallXGrid, 8 * wallYGrid, wallXGrid, wallThickness));
                     walls.Add(new Rectangle(3 * wallXGrid + wallThickness, 9 * wallYGrid, wallXGrid, wallThickness)); ;
                     break;
+
                 default:
                     break;
-            }
+            }  
         }
     }
 }
