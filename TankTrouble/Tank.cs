@@ -127,25 +127,18 @@ namespace TankTrouble
         /// </summary>
         public void Update()
         {
-            if (alive)
+            UpdatePosition();
+
+            // update balls
+            for (int i = 0; i < balls.Count; i++)
             {
-                //TODO
-
-                UpdatePosition();
-
-                // change rectangle positions to new x and y
-
-                // update balls
-                for (int i = 0; i < balls.Count; i++)
+                balls[i].update();
+            }
+            for (int i = 0; i < balls.Count; i++)
+            {
+                if (balls[i].Life <= 0)
                 {
-                    balls[i].update();
-                }
-                for (int i = 0; i < balls.Count; i++)
-                {
-                    if (balls[i].Life <= 0)
-                    {
-                        balls.RemoveAt(i);
-                    }
+                    balls.RemoveAt(i);
                 }
             }
 
@@ -163,12 +156,12 @@ namespace TankTrouble
                 Globals.SpriteBatch.Draw(texture, hitbox, null, Color.Black, 0, new Vector2(0, 0), SpriteEffects.None, 1);
                 Globals.SpriteBatch.Draw(texture, Rectangle, null, Color.White, Rotation, new Vector2(0.5f, 0.5f), SpriteEffects.None, 1);
                 Globals.SpriteBatch.Draw(texture, cannon, null, Color.White, Rotation, new Vector2(0.5f, 0f), SpriteEffects.None, 1);
+            }
 
-                // draw balls
-                for (int i = 0; i < balls.Count; i++)
-                {
-                    Globals.SpriteBatch.Draw(texture, balls[i].ball, Color.White);
-                }
+            // draw balls
+            for (int i = 0; i < balls.Count; i++)
+            {
+                Globals.SpriteBatch.Draw(texture, balls[i].ball, Color.White);
             }
         }
 
@@ -263,8 +256,10 @@ namespace TankTrouble
             if (hitbox.Intersects(ball))
             {
                 // TODO Make it so tanks actually die and stuff
-               alive = false;
-               return true;
+                xPos = -100;
+                yPos = -100;
+                alive = false;
+                return true;
             }
             return false;
         }

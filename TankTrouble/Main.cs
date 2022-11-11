@@ -78,7 +78,7 @@ namespace TankTrouble
 
             // Wall Grid
             wallThickness = 10;
-            wallXGrid = (424-wallThickness) / 4;
+            wallXGrid = (425-wallThickness) / 4;
             wallYGrid = (900-wallThickness) / 10;
 
             rng = new Random();
@@ -321,8 +321,8 @@ namespace TankTrouble
             walls.Clear();
             walls.Add(new Rectangle(wallThickness, 0, 4 * wallXGrid, wallThickness));
             walls.Add(new Rectangle(0, 0, wallThickness, 10 * wallYGrid));
-            walls.Add(new Rectangle(4 * wallXGrid, 0, wallThickness, 10 * wallYGrid));
-            walls.Add(new Rectangle(0, 10 * wallYGrid, 4 * wallXGrid + wallThickness, wallThickness));
+            walls.Add(new Rectangle(4 * wallXGrid, 0, wallThickness + 1, 10 * wallYGrid));
+            walls.Add(new Rectangle(0, 10 * wallYGrid, 4 * wallXGrid + wallThickness + 1, wallThickness));
 
             switch (map)
             {
@@ -400,16 +400,18 @@ namespace TankTrouble
             {
                 player1.Deaths += 1;
             }
-            newRoundDelay = 4000.0f;
+            newRoundDelay = 2000.0f;
             player1.Balls.Clear();
             GenerateWalls(rng.Next(0,3));
-            player1.Alive = true;
             player1.X = rng.Next(50, 400);
             player1.Y = rng.Next(30, 840);
             player2.Balls.Clear();
-            player2.Alive = true;
             player2.X = rng.Next(50, 400);
             player2.Y = rng.Next(30, 840);
+            player1.Alive = true;
+            player2.Alive = true;
+
+
         }
     }
 }
