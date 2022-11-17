@@ -125,3 +125,4 @@ Z:\IGMProfile\Desktop\Tanks\TankTrouble\obj\Debug\net6.0\TankTrouble.genruntimec
 Z:\IGMProfile\Desktop\Tanks\TankTrouble\obj\Debug\net6.0\ref\TankTrouble.dll
 C:\Users\acebe\OneDrive\Desktop\TANKS\TankTrouble\bin\Debug\net6.0\Content\File.xnb
 C:\Users\acebe\Documents\CodeProjects\TankTroubleRepo\TankTrouble\bin\Debug\net6.0\Content\File.xnb
+C:\Users\acebe\OneDrive\Desktop\TANKS\TankTrouble\bin\Debug\net6.0\devcade-library.dll

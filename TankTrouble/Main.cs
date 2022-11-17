@@ -31,8 +31,8 @@ namespace TankTrouble
 
         private Balls testBall;
 
-        private Texture2D blue;
-        private Texture2D red;
+        private Texture2D purple;
+        private Texture2D yellow;
         private Texture2D black;
 
         private int size;
@@ -91,8 +91,8 @@ namespace TankTrouble
             Globals.WindowWidth = _graphics.PreferredBackBufferWidth;
             Globals.WindowHeight = _graphics.PreferredBackBufferHeight;
 
-            player1 = new Tank(100, 100, 0, tankWidth, tankHeight, blue, false);
-            player2 = new Tank(300, 800, 3.14f, tankWidth, tankHeight, red, false);
+            player1 = new Tank(100, 100, 0, tankWidth, tankHeight, purple, false);
+            player2 = new Tank(300, 800, 3.14f, tankWidth, tankHeight, yellow, false);
 
             NewRound();
 
@@ -106,13 +106,13 @@ namespace TankTrouble
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
 
-            // test blue texture
-            blue = new Texture2D(GraphicsDevice, 1, 1);
-            blue.SetData(new Color[] { Color.Blue });
+            // test purple texture
+            purple = new Texture2D(GraphicsDevice, 1, 1);
+            purple.SetData(new Color[] { Color.Purple });
 
-            // test red texture
-            red = new Texture2D(GraphicsDevice, 1, 1);
-            red.SetData(new Color[] { Color.Red });
+            // test yellow texture
+            yellow = new Texture2D(GraphicsDevice, 1, 1);
+            yellow.SetData(new Color[] { Color.Yellow });
 
             // test black texture
             black = new Texture2D(GraphicsDevice, 1, 1);
@@ -298,12 +298,12 @@ namespace TankTrouble
 
             // Text
             _spriteBatch.DrawString(_font,
-                   $"Blue: {player2.Deaths}",
-                   new Vector2(10, 940), Color.Blue);
+                   $"Purple: {player2.Deaths}",
+                   new Vector2(10, 940), Color.Purple);
 
             _spriteBatch.DrawString(_font,
-                   $"Red: {player1.Deaths}",
-                   new Vector2(220, 940), Color.Red);
+                   $"Yellow: {player1.Deaths}",
+                   new Vector2(220, 940), Color.Yellow);
 
             _spriteBatch.End();
 

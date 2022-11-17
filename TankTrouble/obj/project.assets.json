@@ -2,6 +2,15 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "devcade-library/1.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/devcade-library.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/devcade-library.dll": {}
+        }
+      },
       "MonoGame.Content.Builder.Task/3.8.1.303": {
         "type": "package",
         "build": {
@@ -58,6 +67,19 @@
     }
   },
   "libraries": {
+    "devcade-library/1.1.0": {
+      "sha512": "C0IzPL3PqNJVf5SrtrtPMFZkMdbTb4eaVGaZDKuFNrVbhb1Jh62deI+PURKSRTSeOkNVbHgONJ/wnhf3j3B0Tg==",
+      "type": "package",
+      "path": "devcade-library/1.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "devcade-library.1.1.0.nupkg.sha512",
+        "devcade-library.nuspec",
+        "lib/netstandard2.0/devcade-library.dll"
+      ]
+    },
     "MonoGame.Content.Builder.Task/3.8.1.303": {
       "sha512": "9Ilzzje62LhWElbPNEl7vh7XsRSbze+lvCJdZtTZUGu48FRgvYN6THURwIB9PN98EI33/Wnf6iuShNUtD7hL4Q==",
       "type": "package",
@@ -98,7 +120,8 @@
   "projectFileDependencyGroups": {
     "net6.0": [
       "MonoGame.Content.Builder.Task >= 3.8.1.303",
-      "MonoGame.Framework.DesktopGL >= 3.8.1.303"
+      "MonoGame.Framework.DesktopGL >= 3.8.1.303",
+      "devcade-library >= 1.1.0"
     ]
   },
   "packageFolders": {
@@ -147,6 +170,10 @@
           "MonoGame.Framework.DesktopGL": {
             "target": "Package",
             "version": "[3.8.1.303, )"
+          },
+          "devcade-library": {
+            "target": "Package",
+            "version": "[1.1.0, )"
           }
         },
         "imports": [
