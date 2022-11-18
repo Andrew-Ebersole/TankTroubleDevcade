@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\acebe\\OneDrive\\Desktop\\TANKS\\TankTrouble\\TankTrouble.csproj": {}
+    "C:\\Users\\Andrew\\Desktop\\Tanks\\TankTrouble\\TankTrouble.csproj": {}
   },
   "projects": {
-    "C:\\Users\\acebe\\OneDrive\\Desktop\\TANKS\\TankTrouble\\TankTrouble.csproj": {
+    "C:\\Users\\Andrew\\Desktop\\Tanks\\TankTrouble\\TankTrouble.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\acebe\\OneDrive\\Desktop\\TANKS\\TankTrouble\\TankTrouble.csproj",
+        "projectUniqueName": "C:\\Users\\Andrew\\Desktop\\Tanks\\TankTrouble\\TankTrouble.csproj",
         "projectName": "TankTrouble",
-        "projectPath": "C:\\Users\\acebe\\OneDrive\\Desktop\\TANKS\\TankTrouble\\TankTrouble.csproj",
-        "packagesPath": "C:\\Users\\acebe\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\acebe\\OneDrive\\Desktop\\TANKS\\TankTrouble\\obj\\",
+        "projectPath": "C:\\Users\\Andrew\\Desktop\\Tanks\\TankTrouble\\TankTrouble.csproj",
+        "packagesPath": "C:\\Users\\Andrew\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Andrew\\Desktop\\Tanks\\TankTrouble\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\acebe\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Andrew\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -69,7 +69,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

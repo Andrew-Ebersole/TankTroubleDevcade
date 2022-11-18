@@ -33,8 +33,10 @@ namespace TankTrouble
         private Texture2D texture;
 
         // tank deaths
-        int deaths;
-        bool alive;
+        private int deaths;
+        private bool alive;
+
+        private int size;
 
         // Rng
         Random rng;
@@ -99,7 +101,7 @@ namespace TankTrouble
         public bool Alive { get { return alive; } set { alive = value; } }
         // --- Constructor --- //
 
-        public Tank(int x, int y, float rotation, int width, int height, Texture2D texture, bool alive)
+        public Tank(int x, int y, float rotation, int width, int height, Texture2D texture, bool alive, int size)
         {
             // TODO
             // enter calculated positions to rectangle construtor
@@ -116,6 +118,7 @@ namespace TankTrouble
             deaths = 0;
             rng = new Random();
             this.alive = alive;
+            this.size = size;
         }
 
 
@@ -171,11 +174,11 @@ namespace TankTrouble
             {
                 balls.Add(new Balls(
 
-                X + (int)(-5 + -15f * (Math.Sin(Rotation))),
-                Y + (int)(-5 + 15f * (Math.Cos(Rotation))),
-                8,
-                (int)(-300 * (Math.Sin(Rotation))),
-                (int)(300 * (Math.Cos(Rotation))),
+                X + size*(int)(-5 + -15f * (Math.Sin(Rotation)))/1000,
+                Y + size*(int)(-5 + 15f * (Math.Cos(Rotation)))/1000,
+                size*8/1000,
+                size*(int)(-300 * (Math.Sin(Rotation)))/1000,
+                size*(int)(300 * (Math.Cos(Rotation)))/1000,
                 texture,
                 4.12f
 

@@ -32,7 +32,7 @@ namespace TankTrouble
         private Balls testBall;
 
         private Texture2D purple;
-        private Texture2D yellow;
+        private Texture2D red;
         private Texture2D black;
 
         private int size;
@@ -47,7 +47,7 @@ namespace TankTrouble
         Tank player2;
 
         Random rng;
-        // keyboard states
+        // keyboard states and
         private KeyboardState currentKB;
         private KeyboardState previousKB;
 
@@ -59,9 +59,6 @@ namespace TankTrouble
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = false;
-            size = 1000;
-            _graphics.PreferredBackBufferHeight = size;
-            _graphics.PreferredBackBufferWidth = 9*(size / 21 );
         }
 
         /// <summary>
@@ -72,18 +69,32 @@ namespace TankTrouble
 
             base.Initialize();
 
-            tankWidth = 30;
-            tankHeight = 38;
+            #region
+#if DEBUG
+            _graphics.PreferredBackBufferWidth = 425;
+            _graphics.PreferredBackBufferHeight = 1000;
+            _graphics.ApplyChanges();
+#else
+			_graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+			_graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+			_graphics.ApplyChanges();
+#endif
+            #endregion
+
+            size = _graphics.PreferredBackBufferHeight;
+
+            tankWidth = size*30/1000;
+            tankHeight = size*38/1000;
             //tankRect = new Rectangle(100, 100, tankWidth, tankHeight);
 
             // Wall Grid
-            wallThickness = 10;
-            wallXGrid = (425-wallThickness) / 4;
-            wallYGrid = (900-wallThickness) / 10;
+            wallThickness = size*10 / 1000;
+            wallXGrid = size*(425-wallThickness) / 4000;
+            wallYGrid = size*(900-wallThickness) / 10000;
 
             rng = new Random();
 
-            testBall = new Balls(200, 200, 15, 200f, 200f, black, 0);
+            //testBall = new Balls(200, 200, 15, 200f, 200f, black, 0);
 
             Globals.SpriteBatch = _spriteBatch;
             Globals.GraphicsDeviceManager = _graphics;
@@ -91,8 +102,10 @@ namespace TankTrouble
             Globals.WindowWidth = _graphics.PreferredBackBufferWidth;
             Globals.WindowHeight = _graphics.PreferredBackBufferHeight;
 
-            player1 = new Tank(100, 100, 0, tankWidth, tankHeight, purple, false);
-            player2 = new Tank(300, 800, 3.14f, tankWidth, tankHeight, yellow, false);
+            player1 = new Tank(size*100/1000, size*100/1000, 0, tankWidth, tankHeight, purple, false, size);
+            player2 = new Tank(size*300/1000, size*800/1000, 3.14f, tankWidth, tankHeight, red, false, size);
+
+            Devcade.Input.Initialize();
 
             NewRound();
 
@@ -110,9 +123,9 @@ namespace TankTrouble
             purple = new Texture2D(GraphicsDevice, 1, 1);
             purple.SetData(new Color[] { Color.Purple });
 
-            // test yellow texture
-            yellow = new Texture2D(GraphicsDevice, 1, 1);
-            yellow.SetData(new Color[] { Color.Yellow });
+            // test red texture
+            red = new Texture2D(GraphicsDevice, 1, 1);
+            red.SetData(new Color[] { Color.Red });
 
             // test black texture
             black = new Texture2D(GraphicsDevice, 1, 1);
@@ -136,41 +149,51 @@ namespace TankTrouble
             Globals.GameTime = gameTime;
 
             // close window if esc is pressed
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
+                || Keyboard.GetState().IsKeyDown(Keys.Escape)
+                || (Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.Menu)
+                && Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.Menu)))
                 Exit();
-
+            
 
             var kstate = Keyboard.GetState();
 
             currentKB = Keyboard.GetState();
 
+
             // --- Player 1 Controls --- //
             // Forward
-            if (kstate.IsKeyDown(Keys.W))
+            if (kstate.IsKeyDown(Keys.W)
+                || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickUp))
             {
-                player1.Velocity = 150;
+                player1.Velocity = size*150/1000;
             }
             // Backwards
-            else if (kstate.IsKeyDown(Keys.S))
+            else if (kstate.IsKeyDown(Keys.S)
+                || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickDown))
             {
-                player1.Velocity = -150;
+                player1.Velocity = size*-150/1000;
             } 
             else
             {
                 player1.Velocity = 0;
             }
             // Turn Left
-            if (kstate.IsKeyDown(Keys.A))
+            if (kstate.IsKeyDown(Keys.A)
+                || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickLeft))
             {
                 player1.Rotation -= 0.06f;
             }
             // Turn Right
-            if (kstate.IsKeyDown(Keys.D))
+            if (kstate.IsKeyDown(Keys.D)
+                || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickRight))
             {
                 player1.Rotation += 0.06f;
             }
             // Shoot
-            if (previousKB.IsKeyUp(Keys.C) && currentKB.IsKeyDown(Keys.C))
+            // Is there a better way of doing this? idk.
+            if (previousKB.IsKeyUp(Keys.C) && currentKB.IsKeyDown(Keys.C)
+                || Devcade.Input.GetButtonDown(2, Devcade.Input.ArcadeButtons.A1))
             {
                 player1.Shoot();
             }
@@ -182,31 +205,36 @@ namespace TankTrouble
 
             // --- Player 2 Controls --- //
             // Forward
-            if (kstate.IsKeyDown(Keys.Up))
+            if (kstate.IsKeyDown(Keys.Up)
+                || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickUp))
             {
-                player2.Velocity = 150;
+                player2.Velocity = size*150/1000;
             }
             // Backwards
-            else if (kstate.IsKeyDown(Keys.Down))
+            else if (kstate.IsKeyDown(Keys.Down)
+                || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickDown))
             {
-                player2.Velocity = -150;
+                player2.Velocity = size*-150/1000;
             }
             else
             {
                 player2.Velocity = 0;
             }
             // Turn Left
-            if (kstate.IsKeyDown(Keys.Left))
+            if (kstate.IsKeyDown(Keys.Left)
+                || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickLeft))
             {
                 player2.Rotation -= 0.06f;
             }
             // Turn Right
-            if (kstate.IsKeyDown(Keys.Right))
+            if (kstate.IsKeyDown(Keys.Right)
+                || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickRight))
             {
                 player2.Rotation += 0.06f;
             }
             // Shoot
-            if (previousKB.IsKeyUp(Keys.RightShift) && currentKB.IsKeyDown(Keys.RightShift))
+            if (previousKB.IsKeyUp(Keys.RightShift) && currentKB.IsKeyDown(Keys.RightShift)
+                || Devcade.Input.GetButtonDown(1, Devcade.Input.ArcadeButtons.A1))
             {
                 player2.Shoot();
             }
@@ -269,6 +297,8 @@ namespace TankTrouble
 
             previousKB = currentKB;
 
+            Devcade.Input.Update();
+
             base.Update(gameTime);
         }
 
@@ -290,7 +320,7 @@ namespace TankTrouble
 
             //_spriteBatch.Draw(black, ballRect, Color.White);
 
-            testBall.Draw();
+            //testBall.Draw();
             for (int i = 0; i < walls.Count; i++)
             {
                 _spriteBatch.Draw(activeTexture, walls[i], Color.White);
@@ -299,11 +329,11 @@ namespace TankTrouble
             // Text
             _spriteBatch.DrawString(_font,
                    $"Purple: {player2.Deaths}",
-                   new Vector2(10, 940), Color.Purple);
+                   new Vector2(size*10/1000, size*940/1000), Color.Purple);
 
             _spriteBatch.DrawString(_font,
-                   $"Yellow: {player1.Deaths}",
-                   new Vector2(220, 940), Color.Yellow);
+                   $"Red: {player1.Deaths}",
+                   new Vector2(size*220/1000, size*940/1000), Color.Red);
 
             _spriteBatch.End();
 
@@ -319,10 +349,10 @@ namespace TankTrouble
         {
             walls = new List<Rectangle>();
             walls.Clear();
-            walls.Add(new Rectangle(wallThickness, 0, 4 * wallXGrid, wallThickness));
+            walls.Add(new Rectangle(wallThickness, 0, _graphics.PreferredBackBufferWidth, wallThickness));
             walls.Add(new Rectangle(0, 0, wallThickness, 10 * wallYGrid));
-            walls.Add(new Rectangle(4 * wallXGrid, 0, wallThickness + 1, 10 * wallYGrid));
-            walls.Add(new Rectangle(0, 10 * wallYGrid, 4 * wallXGrid + wallThickness + 1, wallThickness));
+            walls.Add(new Rectangle(_graphics.PreferredBackBufferWidth-wallThickness, 0, wallThickness, 10 * wallYGrid));
+            walls.Add(new Rectangle(0, 10 * wallYGrid, _graphics.PreferredBackBufferWidth, wallThickness));
 
             switch (map)
             {
@@ -403,14 +433,13 @@ namespace TankTrouble
             newRoundDelay = 2000.0f;
             player1.Balls.Clear();
             GenerateWalls(rng.Next(0,3));
-            player1.X = rng.Next(50, 400);
-            player1.Y = rng.Next(30, 840);
+            player1.X = rng.Next(size*100/1000, size*350/1000);
+            player1.Y = rng.Next(size*100/1000, size*800/1000);
             player2.Balls.Clear();
-            player2.X = rng.Next(50, 400);
-            player2.Y = rng.Next(30, 840);
+            player2.X = rng.Next(size*100/1000, size*350/1000);
+            player2.Y = rng.Next(size*100/1000, size*800/1000);
             player1.Alive = true;
             player2.Alive = true;
-
 
         }
     }
