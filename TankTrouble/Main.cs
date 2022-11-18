@@ -25,15 +25,17 @@ namespace TankTrouble
 
         private List<Rectangle> walls;
 
-
+        private bool gameRunning;
         private int tankHeight;
         private int tankWidth;
-
+        private int winner;
         private Balls testBall;
 
         private Texture2D purple;
         private Texture2D red;
         private Texture2D black;
+
+        private int gameChoice;
 
         private int size;
         private float newRoundDelay;
@@ -42,6 +44,10 @@ namespace TankTrouble
         int wallXGrid;
         int wallYGrid;
         int wallThickness;
+        int wallXGap;
+        int wallYGap;
+
+        Gamemode gamemode;
 
         Tank player1;
         Tank player2;
@@ -80,6 +86,9 @@ namespace TankTrouble
 			_graphics.ApplyChanges();
 #endif
             #endregion
+            gameRunning = false;
+            winner = 0;
+            walls = new List<Rectangle>();
 
             size = _graphics.PreferredBackBufferHeight;
 
@@ -91,7 +100,8 @@ namespace TankTrouble
             wallThickness = size*10 / 1000;
             wallXGrid = size*(425-wallThickness) / 4000;
             wallYGrid = size*(900-wallThickness) / 10000;
-
+            wallXGap = wallXGrid - wallThickness;
+            wallYGap = wallYGrid - wallThickness;
             rng = new Random();
 
             //testBall = new Balls(200, 200, 15, 200f, 200f, black, 0);
@@ -107,7 +117,6 @@ namespace TankTrouble
 
             Devcade.Input.Initialize();
 
-            NewRound();
 
         }
 
@@ -148,157 +157,213 @@ namespace TankTrouble
 
             Globals.GameTime = gameTime;
 
-            // close window if esc is pressed
+            // close window if esc or devcade menu buttons pressed
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
                 || Keyboard.GetState().IsKeyDown(Keys.Escape)
                 || (Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.Menu)
                 && Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.Menu)))
                 Exit();
             
-
             var kstate = Keyboard.GetState();
-
             currentKB = Keyboard.GetState();
 
+            // Menu selection when game is not running
+            if (!gameRunning)
+            {
 
-            // --- Player 1 Controls --- //
-            // Forward
-            if (kstate.IsKeyDown(Keys.W)
-                || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickUp))
-            {
-                player1.Velocity = size*150/1000;
-            }
-            // Backwards
-            else if (kstate.IsKeyDown(Keys.S)
-                || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickDown))
-            {
-                player1.Velocity = size*-150/1000;
-            } 
-            else
-            {
-                player1.Velocity = 0;
-            }
-            // Turn Left
-            if (kstate.IsKeyDown(Keys.A)
-                || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickLeft))
-            {
-                player1.Rotation -= 0.06f;
-            }
-            // Turn Right
-            if (kstate.IsKeyDown(Keys.D)
-                || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickRight))
-            {
-                player1.Rotation += 0.06f;
-            }
-            // Shoot
-            // Is there a better way of doing this? idk.
-            if (previousKB.IsKeyUp(Keys.C) && currentKB.IsKeyDown(Keys.C)
-                || Devcade.Input.GetButtonDown(2, Devcade.Input.ArcadeButtons.A1))
-            {
-                player1.Shoot();
-            }
-            // Ability
-            if (kstate.IsKeyDown(Keys.V))
-            {
-                NewRound();
-            }
-
-            // --- Player 2 Controls --- //
-            // Forward
-            if (kstate.IsKeyDown(Keys.Up)
-                || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickUp))
-            {
-                player2.Velocity = size*150/1000;
-            }
-            // Backwards
-            else if (kstate.IsKeyDown(Keys.Down)
-                || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickDown))
-            {
-                player2.Velocity = size*-150/1000;
-            }
-            else
-            {
-                player2.Velocity = 0;
-            }
-            // Turn Left
-            if (kstate.IsKeyDown(Keys.Left)
-                || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickLeft))
-            {
-                player2.Rotation -= 0.06f;
-            }
-            // Turn Right
-            if (kstate.IsKeyDown(Keys.Right)
-                || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickRight))
-            {
-                player2.Rotation += 0.06f;
-            }
-            // Shoot
-            if (previousKB.IsKeyUp(Keys.RightShift) && currentKB.IsKeyDown(Keys.RightShift)
-                || Devcade.Input.GetButtonDown(1, Devcade.Input.ArcadeButtons.A1))
-            {
-                player2.Shoot();
-            }
-            // Ability
-            if (kstate.IsKeyDown(Keys.NumPad2))
-            {
-                // Not implemented RN
-            }
-
-            // Colides with wall 
-            for (int i = 0; i < walls.Count; i++)
-            {
-                player1.Intersect(walls[i]);
-                player2.Intersect(walls[i]);
-            }
-
-            // Colides with ball
-            for (int i = 0; i < player1.Balls.Count; i++)
-            {
-                if (player1.Balls[i].Life <= 4)
+                if (previousKB.IsKeyUp(Keys.Left) && currentKB.IsKeyDown(Keys.Left)
+                    || Devcade.Input.GetButtonDown(1, Devcade.Input.ArcadeButtons.StickLeft)
+                    || Devcade.Input.GetButtonDown(1, Devcade.Input.ArcadeButtons.A1))
                 {
-                    if (player1.Hit(player1.Balls[i].ball))
+                    if (gameChoice > 0)
                     {
-                        player1.RemoveBall(i);
-                    }
-                    if (player2.Hit(player1.Balls[i].ball))
-                    {
-                        player1.RemoveBall(i);
+                        gameChoice--;
                     }
                 }
-            }
-            for (int i = 0; i < player2.Balls.Count; i++)
-            {
-                if (player2.Balls[i].Life <= 4)
+
+                if (previousKB.IsKeyUp(Keys.Right) && currentKB.IsKeyDown(Keys.Right)
+                    || Devcade.Input.GetButtonDown(1, Devcade.Input.ArcadeButtons.StickRight)
+                    || Devcade.Input.GetButtonDown(1, Devcade.Input.ArcadeButtons.A3))
                 {
-                    if (player1.Hit(player2.Balls[i].ball))
+                    if (gameChoice < 4)
                     {
-                        player2.RemoveBall(i);
-                    }
-                    if (player2.Hit(player2.Balls[i].ball))
-                    {
-                        player2.RemoveBall(i);
+                        gameChoice++;
                     }
                 }
-            }
-            //Update Tanks
-            player1.Update();
-            player2.Update();
 
-            if (!player1.Alive || !player2.Alive)
-            {
-                newRoundDelay -= Globals.GameTime.ElapsedGameTime.Milliseconds;
-                if (newRoundDelay <= 0)
+                switch (gameChoice)
                 {
+                    case 0:
+                        gamemode = Gamemode.firstTo;
+                        break;
+                    case 1:
+                        gamemode = Gamemode.endless;
+                        break;
+                    case 2:
+                        gamemode = Gamemode.lives;
+                        break;
+                    case 3:
+                        gamemode = Gamemode.oneShot;
+                        break;
+                    case 4:
+                        gamemode = Gamemode.dizzy;
+                        break;
+                }
+            }
 
+            // Player controls when game is running
+            if (gameRunning)
+            {
+                #region Player 2 Controls
+                // --- Player 2 Controls --- //
+                // Forward
+                if (kstate.IsKeyDown(Keys.W)
+                    || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickUp))
+                {
+                    player1.Velocity = size * 150 / 1000;
+                }
+                // Backwards
+                else if (kstate.IsKeyDown(Keys.S)
+                    || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickDown))
+                {
+                    player1.Velocity = size * -150 / 1000;
+                }
+                else
+                {
+                    player1.Velocity = 0;
+                }
+                // Turn Left
+                if (kstate.IsKeyDown(Keys.A)
+                    || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickLeft)
+                    || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.A1))
+                {
+                    player1.Rotation -= 0.06f;
+                }
+                // Turn Right
+                if (kstate.IsKeyDown(Keys.D)
+                    || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickRight)
+                    || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.A3))
+                {
+                    player1.Rotation += 0.06f;
+                }
+                // Shoot
+                // Is there a better way of doing this? idk.
+                if (previousKB.IsKeyUp(Keys.C) && currentKB.IsKeyDown(Keys.C)
+                    || Devcade.Input.GetButtonDown(2, Devcade.Input.ArcadeButtons.A2))
+                {
+                    player1.Shoot();
+                }
+                // Ability
+                if (kstate.IsKeyDown(Keys.V))
+                {
                     NewRound();
-                    
                 }
+                #endregion
+                #region Player 1 Controls
+                // --- Player 1 Controls --- //
+                // Forward
+                if (kstate.IsKeyDown(Keys.Up)
+                    || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickUp))
+                {
+                    player2.Velocity = size * 150 / 1000;
+                }
+                // Backwards
+                else if (kstate.IsKeyDown(Keys.Down)
+                    || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickDown))
+                {
+                    player2.Velocity = size * -150 / 1000;
+                }
+                else
+                {
+                    player2.Velocity = 0;
+                }
+                // Turn Left
+                if (kstate.IsKeyDown(Keys.Left)
+                    || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickLeft)
+                    || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.A1))
+                {
+                    player2.Rotation -= 0.06f;
+                }
+                // Turn Right
+                if (kstate.IsKeyDown(Keys.Right)
+                    || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickRight)
+                    || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.A3))
+                {
+                    player2.Rotation += 0.06f;
+                }
+                // Shoot
+                if (previousKB.IsKeyUp(Keys.RightShift) && currentKB.IsKeyDown(Keys.RightShift)
+                    || Devcade.Input.GetButtonDown(1, Devcade.Input.ArcadeButtons.A2))
+                {
+                    player2.Shoot();
+                }
+                // Ability
+                if (kstate.IsKeyDown(Keys.NumPad2))
+                {
+                    // Not implemented RN
+                }
+                #endregion
+                #region Tank and Ball Collisions
+                // Check if tank collides with wall 
+                for (int i = 0; i < walls.Count; i++)
+                {
+                    player1.Intersect(walls[i]);
+                    player2.Intersect(walls[i]);
+                }
+
+                // Colides with ball
+                for (int i = 0; i < player1.Balls.Count; i++)
+                {
+                    if (player1.Balls[i].Life <= 4)
+                    {
+                        if (player1.Hit(player1.Balls[i].ball))
+                        {
+                            player1.RemoveBall(i);
+                        }
+                        if (player2.Hit(player1.Balls[i].ball))
+                        {
+                            player1.RemoveBall(i);
+                        }
+                    }
+                }
+                for (int i = 0; i < player2.Balls.Count; i++)
+                {
+                    if (player2.Balls[i].Life <= 4)
+                    {
+                        if (player1.Hit(player2.Balls[i].ball))
+                        {
+                            player2.RemoveBall(i);
+                        }
+                        if (player2.Hit(player2.Balls[i].ball))
+                        {
+                            player2.RemoveBall(i);
+                        }
+                    }
+                }
+                #endregion
+                #region other game stuff
+                //Update Tanks
+                player1.Update();
+                player2.Update();
+
+                //when die start new round
+                if (!player1.Alive || !player2.Alive && gameRunning)
+                {
+                    newRoundDelay -= Globals.GameTime.ElapsedGameTime.Milliseconds;
+                    if (newRoundDelay <= 0)
+                    {
+
+                        NewRound();
+
+                    }
+                }
+                #endregion
             }
 
+
+            //update input stuff
             previousKB = currentKB;
-
             Devcade.Input.Update();
-
             base.Update(gameTime);
         }
 
@@ -312,32 +377,89 @@ namespace TankTrouble
 
             _spriteBatch.Begin();
 
-            // draw tank
-            //_spriteBatch.Draw(texture, tankRect, null,  Color.White, tankRotation, new Vector2(0.5f ,0.5f), SpriteEffects.None, 1);
-
-            player1.Draw();
-            player2.Draw();
-
-            //_spriteBatch.Draw(black, ballRect, Color.White);
-
-            //testBall.Draw();
-            for (int i = 0; i < walls.Count; i++)
+            if (!gameRunning)
             {
-                _spriteBatch.Draw(activeTexture, walls[i], Color.White);
+                #region draw menu
+
+                // Title
+                _spriteBatch.DrawString(_font,
+                       $"TANKS",
+                       new Vector2(size * 100 / 1000, size * 300 / 1000), Color.Black);
+
+                // Gamemode
+                _spriteBatch.DrawString(_font,
+                       $"Select Game Mode",
+                       new Vector2(size * 100 / 1000, size * 500 / 1000), Color.Black);
+
+                _spriteBatch.DrawString(_font,
+                       $"<{gamemode}>",
+                       new Vector2(size * 100 / 1000, size * 600 / 1000), Color.DarkGoldenrod);
+                #endregion
+            }
+            if (gameRunning)
+            {
+                #region draw tanks and walls
+                // draw tanks
+                player1.Draw();
+                player2.Draw();
+
+                // draw walls
+                for (int i = 0; i < walls.Count; i++)
+                {
+                    _spriteBatch.Draw(activeTexture, walls[i], Color.White);
+                }
+
+                // Text
+                _spriteBatch.DrawString(_font,
+                       $"Purple: {player2.Deaths}",
+                       new Vector2(size * 10 / 1000, size * 940 / 1000), Color.Purple);
+
+                _spriteBatch.DrawString(_font,
+                       $"Red: {player1.Deaths}",
+                       new Vector2(size * 220 / 1000, size * 940 / 1000), Color.Red);
+                #endregion
             }
 
-            // Text
-            _spriteBatch.DrawString(_font,
-                   $"Purple: {player2.Deaths}",
-                   new Vector2(size*10/1000, size*940/1000), Color.Purple);
 
-            _spriteBatch.DrawString(_font,
-                   $"Red: {player1.Deaths}",
-                   new Vector2(size*220/1000, size*940/1000), Color.Red);
 
             _spriteBatch.End();
-
             base.Draw(gameTime);
+        }
+
+        public enum Gamemode
+        {
+            endless,
+            firstTo,
+            lives,
+            oneShot,
+            infiniteShot,
+            dizzy = 5
+        }
+
+        public void MainMenu()
+        {
+            gameChoice = 0;
+        }
+
+        public void SelectGamemode(Gamemode game, int winCondition)
+        {
+            switch (game)
+            {
+                case Gamemode.endless:
+                    break;
+
+                case Gamemode.firstTo:
+                    break;
+                case Gamemode.lives:
+                    break;
+                case Gamemode.oneShot:
+                    break;
+                case Gamemode.infiniteShot:
+                    break;
+                case Gamemode.dizzy:
+                    break;
+            }
+            NewRound();
         }
 
         /// <summary>
@@ -347,81 +469,85 @@ namespace TankTrouble
         /// <param name="map"> The number of map to draw starting at 0</param>
         public void GenerateWalls(int map)
         {
-            walls = new List<Rectangle>();
-            walls.Clear();
-            walls.Add(new Rectangle(wallThickness, 0, _graphics.PreferredBackBufferWidth, wallThickness));
-            walls.Add(new Rectangle(0, 0, wallThickness, 10 * wallYGrid));
-            walls.Add(new Rectangle(_graphics.PreferredBackBufferWidth-wallThickness, 0, wallThickness, 10 * wallYGrid));
-            walls.Add(new Rectangle(0, 10 * wallYGrid, _graphics.PreferredBackBufferWidth, wallThickness));
-
-            switch (map)
+            if (gameRunning)
             {
-                case 0:
-                    walls.Add(new Rectangle(0, 1 * wallYGrid, wallXGrid + wallThickness, wallThickness));
-                    walls.Add(new Rectangle(2 * wallXGrid, 0, wallThickness, wallYGrid));
-                    walls.Add(new Rectangle(2 * wallXGrid, wallYGrid, wallXGrid + wallThickness, wallThickness));
-                    walls.Add(new Rectangle(wallXGrid + wallThickness, 2 * wallYGrid, wallXGrid, wallThickness));
-                    walls.Add(new Rectangle(wallXGrid, 2 * wallYGrid, wallThickness, 3 * wallYGrid));
-                    walls.Add(new Rectangle(3 * wallXGrid, 2 * wallYGrid, wallThickness, 3 * wallYGrid));
-                    walls.Add(new Rectangle(2 * wallXGrid + wallThickness, 3 * wallYGrid, wallXGrid - wallThickness, wallThickness));
-                    walls.Add(new Rectangle(2 * wallXGrid, 5 * wallYGrid, wallThickness, wallYGrid));
-                    walls.Add(new Rectangle(wallXGrid + wallThickness, 4 * wallYGrid, wallXGrid, wallThickness));
-                    walls.Add(new Rectangle(2 * wallXGrid, 6 * wallYGrid, wallXGrid + wallThickness, wallThickness));
-                    walls.Add(new Rectangle(wallXGrid, 6 * wallYGrid, wallThickness, 2 * wallYGrid));
-                    walls.Add(new Rectangle(wallXGrid + wallThickness, 9 * wallYGrid, wallXGrid, wallThickness));
-                    walls.Add(new Rectangle(2 * wallXGrid, 7 * wallYGrid, wallThickness, 2 * wallYGrid));
-                    walls.Add(new Rectangle(wallThickness, 8 * wallYGrid, wallXGrid, wallThickness));
-                    walls.Add(new Rectangle(wallThickness + 2 * wallXGrid, 8 * wallYGrid, wallXGrid, wallThickness));
-                    walls.Add(new Rectangle(3 * wallXGrid + wallThickness, 9 * wallYGrid, wallXGrid, wallThickness)); ;
-                    break;
+                
+                walls.Clear();
+                walls.Add(new Rectangle(wallThickness, 0, _graphics.PreferredBackBufferWidth, wallThickness));
+                walls.Add(new Rectangle(0, 0, wallThickness, 10 * wallYGrid));
+                walls.Add(new Rectangle(_graphics.PreferredBackBufferWidth - wallThickness, 0, wallThickness, 10 * wallYGrid));
+                walls.Add(new Rectangle(0, 10 * wallYGrid, _graphics.PreferredBackBufferWidth, wallThickness));
 
-                case 1:
-                    walls.Add(new Rectangle(wallXGrid, wallYGrid, wallThickness, wallYGrid));
-                    walls.Add(new Rectangle(3 * wallXGrid, wallYGrid, wallThickness, wallYGrid));
-                    walls.Add(new Rectangle(wallThickness, 2 * wallYGrid, wallXGrid, wallThickness));
-                    walls.Add(new Rectangle(3 * wallXGrid, 2 * wallYGrid, wallXGrid, wallThickness));
-                    walls.Add(new Rectangle(2 * wallXGrid, 2 * wallYGrid, wallThickness, wallYGrid));
-                    walls.Add(new Rectangle(wallXGrid, 3 * wallYGrid, 2 * wallXGrid, wallThickness));
-                    walls.Add(new Rectangle(wallXGrid, 3 * wallYGrid, wallThickness, wallYGrid));
-                    walls.Add(new Rectangle(3 * wallXGrid, 3 * wallYGrid, wallThickness, wallYGrid));
-                    walls.Add(new Rectangle(wallThickness, 5 * wallYGrid, wallXGrid, wallThickness));
-                    walls.Add(new Rectangle(3 * wallXGrid, 5 * wallYGrid, wallXGrid, wallThickness));
-                    walls.Add(new Rectangle(wallXGrid, 6 * wallYGrid, wallThickness, wallYGrid));
-                    walls.Add(new Rectangle(3 * wallXGrid, 6 * wallYGrid, wallThickness, wallYGrid));
-                    walls.Add(new Rectangle(2 * wallXGrid, 7 * wallYGrid, wallThickness, wallYGrid));
-                    walls.Add(new Rectangle(wallXGrid, 7 * wallYGrid, 2 * wallXGrid + wallThickness, wallThickness));
-                    walls.Add(new Rectangle(wallThickness, 8 * wallYGrid, wallXGrid, wallThickness));
-                    walls.Add(new Rectangle(3 * wallXGrid, 8 * wallYGrid, wallXGrid, wallThickness));
-                    walls.Add(new Rectangle(wallXGrid, 8 * wallYGrid, wallThickness, wallYGrid));
-                    walls.Add(new Rectangle(3 * wallXGrid, 8 * wallYGrid, wallThickness, wallYGrid));
-                    break;
+                switch (map)
+                {
+                    case 0:
+                        walls.Add(new Rectangle(0, 1 * wallYGrid, wallXGrid + wallThickness, wallThickness));
+                        walls.Add(new Rectangle(2 * wallXGrid, 0, wallThickness, wallYGrid));
+                        walls.Add(new Rectangle(2 * wallXGrid, wallYGrid, wallXGrid + wallThickness, wallThickness));
+                        walls.Add(new Rectangle(wallXGrid + wallThickness, 2 * wallYGrid, wallXGrid, wallThickness));
+                        walls.Add(new Rectangle(wallXGrid, 2 * wallYGrid, wallThickness, 3 * wallYGrid));
+                        walls.Add(new Rectangle(3 * wallXGrid, 2 * wallYGrid, wallThickness, 3 * wallYGrid));
+                        walls.Add(new Rectangle(2 * wallXGrid + wallThickness, 3 * wallYGrid, wallXGrid - wallThickness, wallThickness));
+                        walls.Add(new Rectangle(2 * wallXGrid, 5 * wallYGrid, wallThickness, wallYGrid));
+                        walls.Add(new Rectangle(wallXGrid + wallThickness, 4 * wallYGrid, wallXGrid, wallThickness));
+                        walls.Add(new Rectangle(2 * wallXGrid, 6 * wallYGrid, wallXGrid + wallThickness, wallThickness));
+                        walls.Add(new Rectangle(wallXGrid, 6 * wallYGrid, wallThickness, 2 * wallYGrid));
+                        walls.Add(new Rectangle(wallXGrid + wallThickness, 9 * wallYGrid, wallXGrid, wallThickness));
+                        walls.Add(new Rectangle(2 * wallXGrid, 7 * wallYGrid, wallThickness, 2 * wallYGrid));
+                        walls.Add(new Rectangle(wallThickness, 8 * wallYGrid, wallXGrid, wallThickness));
+                        walls.Add(new Rectangle(wallThickness + 2 * wallXGrid, 8 * wallYGrid, wallXGrid, wallThickness));
+                        walls.Add(new Rectangle(3 * wallXGrid + wallThickness, 9 * wallYGrid, wallXGrid * 2, wallThickness)); ;
+                        break;
 
-                case 2:
-                    walls.Add(new Rectangle(2 * wallXGrid, wallThickness, wallThickness, wallYGrid));
-                    walls.Add(new Rectangle(wallXGrid, wallYGrid, wallXGrid, wallThickness));
-                    walls.Add(new Rectangle(3 * wallXGrid, wallYGrid, wallThickness, 2 * wallYGrid));
-                    walls.Add(new Rectangle(wallThickness, 2 * wallYGrid, wallXGrid, wallThickness));
-                    walls.Add(new Rectangle(2 * wallXGrid, 2 * wallYGrid, wallXGrid, wallThickness));
-                    walls.Add(new Rectangle(wallXGrid, 3 * wallYGrid, 2 * wallXGrid + wallThickness, wallThickness));
-                    walls.Add(new Rectangle(wallXGrid, 4 * wallYGrid, wallThickness, wallYGrid));
-                    walls.Add(new Rectangle(wallXGrid + wallThickness, 4 * wallYGrid, wallXGrid - wallThickness, wallThickness));
-                    walls.Add(new Rectangle(3 * wallXGrid, 4 * wallYGrid, wallThickness, wallYGrid));
-                    walls.Add(new Rectangle(wallThickness, 5 * wallYGrid, wallXGrid, wallThickness));
-                    walls.Add(new Rectangle(3 * wallXGrid, 5 * wallYGrid, wallXGrid, wallThickness));
-                    walls.Add(new Rectangle(wallXGrid, 6 * wallYGrid, wallThickness, wallYGrid));
-                    walls.Add(new Rectangle(3 * wallXGrid, 6 * wallYGrid, wallThickness, wallYGrid));
-                    walls.Add(new Rectangle(wallXGrid, 8 * wallYGrid, wallThickness, wallYGrid));
-                    walls.Add(new Rectangle(3 * wallXGrid, 8 * wallYGrid, wallThickness, wallYGrid));
+                    case 1:
+                        walls.Add(new Rectangle(wallXGrid, wallYGrid, wallThickness, wallYGrid));
+                        walls.Add(new Rectangle(3 * wallXGrid, wallYGrid, wallThickness, wallYGrid));
+                        walls.Add(new Rectangle(wallThickness, 2 * wallYGrid, wallXGrid, wallThickness));
+                        walls.Add(new Rectangle(3 * wallXGrid, 2 * wallYGrid, wallXGrid * 2, wallThickness));
+                        walls.Add(new Rectangle(2 * wallXGrid, 2 * wallYGrid, wallThickness, wallYGrid));
+                        walls.Add(new Rectangle(wallXGrid, 3 * wallYGrid, 2 * wallXGrid, wallThickness));
+                        walls.Add(new Rectangle(wallXGrid, 3 * wallYGrid, wallThickness, wallYGrid));
+                        walls.Add(new Rectangle(3 * wallXGrid, 3 * wallYGrid, wallThickness, wallYGrid));
+                        walls.Add(new Rectangle(wallThickness, 5 * wallYGrid, wallXGrid, wallThickness));
+                        walls.Add(new Rectangle(3 * wallXGrid, 5 * wallYGrid, wallXGrid * 2, wallThickness));
+                        walls.Add(new Rectangle(wallXGrid, 6 * wallYGrid, wallThickness, wallYGrid));
+                        walls.Add(new Rectangle(3 * wallXGrid, 6 * wallYGrid, wallThickness, wallYGrid));
+                        walls.Add(new Rectangle(2 * wallXGrid, 7 * wallYGrid, wallThickness, wallYGrid));
+                        walls.Add(new Rectangle(wallXGrid, 7 * wallYGrid, 2 * wallXGrid + wallThickness, wallThickness));
+                        walls.Add(new Rectangle(wallThickness, 8 * wallYGrid, wallXGrid, wallThickness));
+                        walls.Add(new Rectangle(3 * wallXGrid, 8 * wallYGrid, wallXGrid * 2, wallThickness));
+                        walls.Add(new Rectangle(wallXGrid, 8 * wallYGrid, wallThickness, wallYGrid));
+                        walls.Add(new Rectangle(3 * wallXGrid, 8 * wallYGrid, wallThickness, wallYGrid));
+                        break;
 
-                    break;
+                    case 2:
+                        walls.Add(new Rectangle(2 * wallXGrid, wallThickness, wallThickness, wallYGrid));
+                        walls.Add(new Rectangle(wallXGrid, wallYGrid, wallXGrid, wallThickness));
+                        walls.Add(new Rectangle(3 * wallXGrid, wallYGrid, wallThickness, 2 * wallYGrid));
+                        walls.Add(new Rectangle(wallThickness, 2 * wallYGrid, wallXGrid, wallThickness));
+                        walls.Add(new Rectangle(2 * wallXGrid, 2 * wallYGrid, wallXGrid, wallThickness));
+                        walls.Add(new Rectangle(wallXGrid, 3 * wallYGrid, 2 * wallXGrid + wallThickness, wallThickness));
+                        walls.Add(new Rectangle(wallXGrid, 4 * wallYGrid, wallThickness, wallYGrid));
+                        walls.Add(new Rectangle(wallXGrid + wallThickness, 4 * wallYGrid, wallXGrid - wallThickness, wallThickness));
+                        walls.Add(new Rectangle(3 * wallXGrid, 4 * wallYGrid, wallThickness, wallYGrid));
+                        walls.Add(new Rectangle(wallThickness, 5 * wallYGrid, wallXGrid, wallThickness));
+                        walls.Add(new Rectangle(3 * wallXGrid, 5 * wallYGrid, wallXGrid * 2, wallThickness));
+                        walls.Add(new Rectangle(wallXGrid, 6 * wallYGrid, wallThickness, wallYGrid));
+                        walls.Add(new Rectangle(3 * wallXGrid, 6 * wallYGrid, wallThickness, wallYGrid));
+                        walls.Add(new Rectangle(wallXGrid, 8 * wallYGrid, wallThickness, wallYGrid));
+                        walls.Add(new Rectangle(3 * wallXGrid, 8 * wallYGrid, wallThickness, wallYGrid));
 
-                default:
-                    break;
-            }  
+                        break;
+
+                    default:
+                        break;
+                }
+            }
         }
 
         public void NewRound()
         {
+            gameRunning = true;
             if (player1.Alive && !player2.Alive)
             {
                 player2.Deaths += 1;
