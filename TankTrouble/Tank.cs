@@ -17,7 +17,7 @@ namespace TankTrouble
         private double xPos;
         private double yPos;
         private float rotation;
-
+        
         // tank's velocity
         private float velocity;
 
@@ -28,6 +28,7 @@ namespace TankTrouble
 
         // list of balls
         private List<Balls> balls;
+        private int maxAmmo;
 
         // texture
         private Texture2D texture;
@@ -100,7 +101,7 @@ namespace TankTrouble
         /// </summary>
         public bool Alive { get { return alive; } set { alive = value; } }
         // --- Constructor --- //
-
+        public int MaxAmmo { get { return maxAmmo; } set { maxAmmo = value; } }
         public Tank(int x, int y, float rotation, int width, int height, Texture2D texture, bool alive, int size)
         {
             // TODO
@@ -170,7 +171,7 @@ namespace TankTrouble
 
         public void Shoot()
         {
-            if (balls.Count < 4 && alive)
+            if (balls.Count < maxAmmo && alive)
             {
                 balls.Add(new Balls(
 

@@ -16,12 +16,16 @@ namespace TankTrouble
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private SpriteFont _font;
-
+        private bool winScreen;
         private Rectangle tankRect;
         private float tankRotation;
 
+        private float passiveSpin;
         
         private Texture2D activeTexture;
+
+        private string[] gamemodes;
+        private int gamemodeIndex;
 
         private List<Rectangle> walls;
 
@@ -30,13 +34,14 @@ namespace TankTrouble
         private int tankWidth;
         private int winner;
         private Balls testBall;
-
         private Texture2D purple;
         private Texture2D red;
         private Texture2D black;
 
-        private int gameChoice;
-
+        private int amountOfWins;
+        
+        private int menuX;
+        private int menuY;
         private int size;
         private float newRoundDelay;
 
@@ -46,8 +51,6 @@ namespace TankTrouble
         int wallThickness;
         int wallXGap;
         int wallYGap;
-
-        Gamemode gamemode;
 
         Tank player1;
         Tank player2;
@@ -115,6 +118,14 @@ namespace TankTrouble
             player1 = new Tank(size*100/1000, size*100/1000, 0, tankWidth, tankHeight, purple, false, size);
             player2 = new Tank(size*300/1000, size*800/1000, 3.14f, tankWidth, tankHeight, red, false, size);
 
+            MainMenu();
+            gamemodes = new string[4];
+            gamemodes[0] = "Normal";
+            gamemodes[1] = "One Shot";
+            gamemodes[2] = "Infinite Ammo";
+            gamemodes[3] = "Dizzy";
+
+            passiveSpin = 0;
             Devcade.Input.Initialize();
 
 
@@ -171,138 +182,153 @@ namespace TankTrouble
             if (!gameRunning)
             {
 
+                if (previousKB.IsKeyUp(Keys.Down) && currentKB.IsKeyDown(Keys.Down)
+                    || Devcade.Input.GetButtonDown(1, Devcade.Input.ArcadeButtons.StickDown))
+                {
+                    if (menuY == 1)
+                    {
+                        menuY++;
+                    }
+                }
+
+                if (previousKB.IsKeyUp(Keys.Up) && currentKB.IsKeyDown(Keys.Up)
+                    || Devcade.Input.GetButtonDown(1, Devcade.Input.ArcadeButtons.StickUp))
+                {
+                    if (menuY == 2)
+                    {
+                        menuY--;
+                    }
+                }
+
                 if (previousKB.IsKeyUp(Keys.Left) && currentKB.IsKeyDown(Keys.Left)
-                    || Devcade.Input.GetButtonDown(1, Devcade.Input.ArcadeButtons.StickLeft)
-                    || Devcade.Input.GetButtonDown(1, Devcade.Input.ArcadeButtons.A1))
+                    || Devcade.Input.GetButtonDown(1, Devcade.Input.ArcadeButtons.StickLeft))
                 {
-                    if (gameChoice > 0)
+                    if (menuY == 2 && amountOfWins > 0)
                     {
-                        gameChoice--;
+                        amountOfWins--;
+                    }
+                    else if (gamemodeIndex > 0)
+                    {
+                        gamemodeIndex--;
                     }
                 }
-
                 if (previousKB.IsKeyUp(Keys.Right) && currentKB.IsKeyDown(Keys.Right)
-                    || Devcade.Input.GetButtonDown(1, Devcade.Input.ArcadeButtons.StickRight)
-                    || Devcade.Input.GetButtonDown(1, Devcade.Input.ArcadeButtons.A3))
+                    || Devcade.Input.GetButtonDown(1, Devcade.Input.ArcadeButtons.StickRight))
                 {
-                    if (gameChoice < 4)
+                    if (menuY == 2 && amountOfWins < int.MaxValue)
                     {
-                        gameChoice++;
+                        amountOfWins++;
+                    }
+                    else if(gamemodeIndex<3)
+                    {
+                        gamemodeIndex++;
                     }
                 }
-
-                switch (gameChoice)
+                if (previousKB.IsKeyUp(Keys.C) && currentKB.IsKeyDown(Keys.C)
+                    || Devcade.Input.GetButtonDown(2, Devcade.Input.ArcadeButtons.A1))
                 {
-                    case 0:
-                        gamemode = Gamemode.firstTo;
-                        break;
-                    case 1:
-                        gamemode = Gamemode.endless;
-                        break;
-                    case 2:
-                        gamemode = Gamemode.lives;
-                        break;
-                    case 3:
-                        gamemode = Gamemode.oneShot;
-                        break;
-                    case 4:
-                        gamemode = Gamemode.dizzy;
-                        break;
+                    SelectGamemode();
+                }
+
+                if (previousKB.IsKeyUp(Keys.V) && currentKB.IsKeyDown(Keys.V)
+                    || (Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.Menu)))
+                {
+                    MainMenu();
                 }
             }
-
             // Player controls when game is running
-            if (gameRunning)
+            else if (gameRunning)
             {
-                #region Player 2 Controls
-                // --- Player 2 Controls --- //
-                // Forward
-                if (kstate.IsKeyDown(Keys.W)
-                    || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickUp))
+                if (!winScreen)
                 {
-                    player1.Velocity = size * 150 / 1000;
+                    #region Player 2 Controls
+                    // --- Player 2 Controls --- //
+                    // Forward
+                    if (kstate.IsKeyDown(Keys.W)
+                        || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickUp))
+                    {
+                        player1.Velocity = size * 150 / 1000;
+                    }
+                    // Backwards
+                    else if (kstate.IsKeyDown(Keys.S)
+                        || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickDown))
+                    {
+                        player1.Velocity = size * -150 / 1000;
+                    }
+                    else
+                    {
+                        player1.Velocity = 0;
+                    }
+                    // Turn Left
+                    if (kstate.IsKeyDown(Keys.A)
+                        || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickLeft)
+                        || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.A1))
+                    {
+                        player1.Rotation -= 0.06f;
+                    }
+                    // Turn Right
+                    if (kstate.IsKeyDown(Keys.D)
+                        || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickRight)
+                        || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.A3))
+                    {
+                        player1.Rotation += 0.06f;
+                    }
+                    // Shoot
+                    // Is there a better way of doing this? idk.
+                    if (previousKB.IsKeyUp(Keys.C) && currentKB.IsKeyDown(Keys.C)
+                        || Devcade.Input.GetButtonDown(2, Devcade.Input.ArcadeButtons.A2))
+                    {
+                        player1.Shoot();
+                    }
+                    // Ability
+                    
+                    #endregion
+                    #region Player 1 Controls
+                    // --- Player 1 Controls --- //
+                    // Forward
+                    if (kstate.IsKeyDown(Keys.Up)
+                        || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickUp))
+                    {
+                        player2.Velocity = size * 150 / 1000;
+                    }
+                    // Backwards
+                    else if (kstate.IsKeyDown(Keys.Down)
+                        || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickDown))
+                    {
+                        player2.Velocity = size * -150 / 1000;
+                    }
+                    else
+                    {
+                        player2.Velocity = 0;
+                    }
+                    // Turn Left
+                    if (kstate.IsKeyDown(Keys.Left)
+                        || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickLeft)
+                        || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.A1))
+                    {
+                        player2.Rotation -= 0.06f;
+                    }
+                    // Turn Right
+                    if (kstate.IsKeyDown(Keys.Right)
+                        || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickRight)
+                        || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.A3))
+                    {
+                        player2.Rotation += 0.06f;
+                    }
+                    // Shoot
+                    if (previousKB.IsKeyUp(Keys.RightShift) && currentKB.IsKeyDown(Keys.RightShift)
+                        || Devcade.Input.GetButtonDown(1, Devcade.Input.ArcadeButtons.A2))
+                    {
+                        player2.Shoot();
+                    }
+                    // Ability
+                    if (kstate.IsKeyDown(Keys.NumPad2))
+                    {
+                        // Not implemented RN
+                    }
+                    #endregion
                 }
-                // Backwards
-                else if (kstate.IsKeyDown(Keys.S)
-                    || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickDown))
-                {
-                    player1.Velocity = size * -150 / 1000;
-                }
-                else
-                {
-                    player1.Velocity = 0;
-                }
-                // Turn Left
-                if (kstate.IsKeyDown(Keys.A)
-                    || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickLeft)
-                    || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.A1))
-                {
-                    player1.Rotation -= 0.06f;
-                }
-                // Turn Right
-                if (kstate.IsKeyDown(Keys.D)
-                    || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.StickRight)
-                    || Devcade.Input.GetButton(2, Devcade.Input.ArcadeButtons.A3))
-                {
-                    player1.Rotation += 0.06f;
-                }
-                // Shoot
-                // Is there a better way of doing this? idk.
-                if (previousKB.IsKeyUp(Keys.C) && currentKB.IsKeyDown(Keys.C)
-                    || Devcade.Input.GetButtonDown(2, Devcade.Input.ArcadeButtons.A2))
-                {
-                    player1.Shoot();
-                }
-                // Ability
-                if (kstate.IsKeyDown(Keys.V))
-                {
-                    NewRound();
-                }
-                #endregion
-                #region Player 1 Controls
-                // --- Player 1 Controls --- //
-                // Forward
-                if (kstate.IsKeyDown(Keys.Up)
-                    || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickUp))
-                {
-                    player2.Velocity = size * 150 / 1000;
-                }
-                // Backwards
-                else if (kstate.IsKeyDown(Keys.Down)
-                    || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickDown))
-                {
-                    player2.Velocity = size * -150 / 1000;
-                }
-                else
-                {
-                    player2.Velocity = 0;
-                }
-                // Turn Left
-                if (kstate.IsKeyDown(Keys.Left)
-                    || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickLeft)
-                    || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.A1))
-                {
-                    player2.Rotation -= 0.06f;
-                }
-                // Turn Right
-                if (kstate.IsKeyDown(Keys.Right)
-                    || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.StickRight)
-                    || Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.A3))
-                {
-                    player2.Rotation += 0.06f;
-                }
-                // Shoot
-                if (previousKB.IsKeyUp(Keys.RightShift) && currentKB.IsKeyDown(Keys.RightShift)
-                    || Devcade.Input.GetButtonDown(1, Devcade.Input.ArcadeButtons.A2))
-                {
-                    player2.Shoot();
-                }
-                // Ability
-                if (kstate.IsKeyDown(Keys.NumPad2))
-                {
-                    // Not implemented RN
-                }
-                #endregion
+
                 #region Tank and Ball Collisions
                 // Check if tank collides with wall 
                 for (int i = 0; i < walls.Count; i++)
@@ -340,22 +366,43 @@ namespace TankTrouble
                         }
                     }
                 }
+
                 #endregion
                 #region other game stuff
                 //Update Tanks
-                player1.Update();
-                player2.Update();
+                if (!winScreen)
+                {
+                    player1.Update();
+                    player2.Update();
+                }
 
                 //when die start new round
                 if (!player1.Alive || !player2.Alive && gameRunning)
                 {
                     newRoundDelay -= Globals.GameTime.ElapsedGameTime.Milliseconds;
-                    if (newRoundDelay <= 0)
+                    if (newRoundDelay <= 0 && !winScreen)
                     {
-
                         NewRound();
-
                     }
+                }
+
+                player1.Rotation -= passiveSpin;
+                player2.Rotation -= passiveSpin;
+                #endregion
+                #region Win screen and restart
+
+                if (player1.Deaths == amountOfWins || player2.Deaths == amountOfWins)
+                {
+                    if (amountOfWins != 0)
+                    {
+                        winScreen = true;
+                    }
+                }
+
+                if (kstate.IsKeyDown(Keys.V)
+                        || (Devcade.Input.GetButton(1, Devcade.Input.ArcadeButtons.Menu)))
+                {
+                    MainMenu();
                 }
                 #endregion
             }
@@ -391,22 +438,72 @@ namespace TankTrouble
                        $"Select Game Mode",
                        new Vector2(size * 100 / 1000, size * 500 / 1000), Color.Black);
 
-                _spriteBatch.DrawString(_font,
-                       $"<{gamemode}>",
+                if (menuY == 1)
+                {
+                    _spriteBatch.DrawString(_font,
+                       $"< {gamemodes[gamemodeIndex]} >",
                        new Vector2(size * 100 / 1000, size * 600 / 1000), Color.DarkGoldenrod);
+                   
+                    if(amountOfWins> 0)
+                    {
+                        _spriteBatch.DrawString(_font,
+                    $"< {amountOfWins} >",
+                       new Vector2(size * 100 / 1000, size * 800 / 1000), Color.Black);
+                    }
+                    else
+                    {
+                        _spriteBatch.DrawString(_font,
+                    $"< infinite >",
+                       new Vector2(size * 100 / 1000, size * 800 / 1000), Color.Black);
+                    }
+
+                } else
+                {
+                    
+                    _spriteBatch.DrawString(_font,
+                       $"< {gamemodes[gamemodeIndex]} >",
+                       new Vector2(size * 100 / 1000, size * 600 / 1000), Color.Black);
+
+                    if (amountOfWins > 0)
+                    {
+                        _spriteBatch.DrawString(_font,
+                    $"< {amountOfWins} >",
+                       new Vector2(size * 100 / 1000, size * 800 / 1000), Color.DarkGoldenrod);
+                    }
+                    else
+                    {
+                        _spriteBatch.DrawString(_font,
+                    $"< infinite >",
+                       new Vector2(size * 100 / 1000, size * 800 / 1000), Color.DarkGoldenrod);
+                    }
+                }
+                
+
+                // AMount of wins
+                _spriteBatch.DrawString(_font,
+                       $"First To",
+                       new Vector2(size * 100 / 1000, size * 700 / 1000), Color.Black);
+
+                
                 #endregion
             }
             if (gameRunning)
             {
                 #region draw tanks and walls
                 // draw tanks
-                player1.Draw();
-                player2.Draw();
+                if (!winScreen)
+                {
+                    player1.Draw();
+                    player2.Draw();
+                }
 
                 // draw walls
-                for (int i = 0; i < walls.Count; i++)
+                if (!winScreen)
                 {
-                    _spriteBatch.Draw(activeTexture, walls[i], Color.White);
+                    for (int i = 0; i < walls.Count; i++)
+                    {
+                        _spriteBatch.Draw(activeTexture, walls[i], Color.White);
+                    }
                 }
 
                 // Text
@@ -418,45 +515,63 @@ namespace TankTrouble
                        $"Red: {player1.Deaths}",
                        new Vector2(size * 220 / 1000, size * 940 / 1000), Color.Red);
                 #endregion
+                if (winScreen)
+                {
+                    if (player1.Deaths > player2.Deaths)
+                    {
+                        _spriteBatch.DrawString(_font,
+                       $"Player 2 Wins!",
+                       new Vector2(size * 100 / 1000, size * 300 / 1000), Color.Red);
+                    } else
+                    {
+                        _spriteBatch.DrawString(_font,
+                       $"Player 1 Wins!",
+                       new Vector2(size * 100 / 1000, size * 300 / 1000), Color.Purple);
+                    }
+                }
             }
-
+            
 
 
             _spriteBatch.End();
             base.Draw(gameTime);
         }
 
-        public enum Gamemode
-        {
-            endless,
-            firstTo,
-            lives,
-            oneShot,
-            infiniteShot,
-            dizzy = 5
-        }
-
         public void MainMenu()
         {
-            gameChoice = 0;
+            gameRunning = false;
+            menuX = 1;
+            menuY= 1;
+            amountOfWins = 5;
+            gamemodeIndex = 0;
+            player1.Deaths = 0;
+            player2.Deaths = 0;
+            winScreen = false;
         }
 
-        public void SelectGamemode(Gamemode game, int winCondition)
+        public void SelectGamemode()
         {
-            switch (game)
+            switch (gamemodeIndex)
             {
-                case Gamemode.endless:
+                case 0:
+                    player1.MaxAmmo = 4;
+                    player2.MaxAmmo = 4;
                     break;
 
-                case Gamemode.firstTo:
+                case 1:
+                    player1.MaxAmmo = 1;
+                    player2.MaxAmmo = 1;
                     break;
-                case Gamemode.lives:
+
+                case 2:
+                    player1.MaxAmmo = 200;
+                    player2.MaxAmmo = 200;
                     break;
-                case Gamemode.oneShot:
-                    break;
-                case Gamemode.infiniteShot:
-                    break;
-                case Gamemode.dizzy:
+
+                case 3:
+                    player1.MaxAmmo = 4;
+                    player2.MaxAmmo = 4;
+                    passiveSpin = 0.08f;
                     break;
             }
             NewRound();
